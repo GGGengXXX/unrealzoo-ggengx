@@ -428,7 +428,11 @@ class UnrealCv_base(gym.Env):
         self.observation_space.pop(agent_index)
         self.unrealcv.destroy_obj(name)  # the agent is removed from the scene
         self.agents.pop(name)
+        st_time=time.time()
         while self.unrealcv.get_camera_num() >len(self.cam_list)+1:
+            if (time.time() - st_time) > 100:
+                print('remove agent timeout')
+                break
             pass
 
 

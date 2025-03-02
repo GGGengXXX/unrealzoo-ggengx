@@ -107,7 +107,7 @@ maps = ['Greek_Island', 'supermarket', 'Brass_Gardens', 'Brass_Palace', 'Brass_S
             'LV_Soul_Cave', 'Dungeon_Demo_00', 'SwimmingPool', 'DesertMap', 'RainMap', 'SnowMap', 'ModularVictorianCity_scene1',
             'SuburbNeighborhood_Day', 'SuburbNeighborhood_Night', 'Storagehouse', 'OceanFloor',
             'ModularNeighborhood', 'ModularSciFiVillage', 'ModularSciFiSeason1', 'LowPolyMedievalInterior_1',
-            'QA_Holding_Cells_A', 'ParkingLot','track_train','Demo_Roof','demonstration_BUNKER','Map_ChemicalPlant_1','Old_Town'
+            'QA_Holding_Cells_A', 'MiddleEast','track_train','Demo_Roof','demonstration_BUNKER','Map_ChemicalPlant_1','Old_Town','ParkingLot'
             ]
 
 Tasks = ['Rendezvous', 'Rescue', 'Track','Navigation']

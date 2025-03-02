@@ -1,4 +1,8 @@
+import os.path
+import time
 import warnings
+
+import cv2
 import gym
 import numpy as np
 from gym import spaces
@@ -424,6 +428,10 @@ class UnrealCv_base(gym.Env):
         self.observation_space.pop(agent_index)
         self.unrealcv.destroy_obj(name)  # the agent is removed from the scene
         self.agents.pop(name)
+        while self.unrealcv.get_camera_num() >len(self.cam_list)+1:
+            pass
+
+
 
     def remove_cam(self, name):
         """
@@ -589,7 +597,7 @@ class UnrealCv_base(gym.Env):
         if layout:
             self.unrealcv.clean_obstacles()
             self.unrealcv.random_obstacles(self.objects_list, self.textures_list,
-                                           len(self.objects_list), self.reset_area, self.start_area, layout_texture)
+                                           random.randint(5,len(self.objects_list)), self.reset_area, self.start_area, layout_texture)
 
     def get_pose_states(self, obj_pos):
         # get the relative pose of each agent and the absolute location and orientation of the agent
@@ -621,6 +629,7 @@ class UnrealCv_base(gym.Env):
 
         # connect to UnrealCV Server
         self.unrealcv = Character_API(port=env_port, ip=env_ip, resolution=self.resolution, comm_mode=self.comm_mode)
+        # self.unrealcv.client.request('r.Vulkan.EnableDefrag=0')
         self.unrealcv.set_map(self.env_name)
         return True
 
@@ -628,7 +637,6 @@ class UnrealCv_base(gym.Env):
         for obj in self.player_list.copy(): # the agent will be fully removed in self.agents
             if self.agents[obj]['agent_type'] not in self.agents_category:
                 self.remove_agent(obj)
-
         for obj in self.player_list:
             self.unrealcv.set_obj_scale(obj, self.agents[obj]['scale'])
             self.unrealcv.set_random(obj, 0)

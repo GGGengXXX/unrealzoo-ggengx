@@ -72,12 +72,19 @@ class Track(UnrealCv_base):
             if obj == self.player_list[self.target_id]:
                 self.unrealcv.set_obj_color(obj, (255, 255, 255))
             else:
-                # if random.random() < 0.2:
-                if obj not in self.objects_list and obj not in self.player_list:
-                    try:
-                        self.unrealcv.set_obj_color(obj, (0, 0, 0))
-                    except:
-                        pass
+                if random.random() < 0.9:
+                    if obj not in self.objects_list and obj not in self.player_list:
+                        try:
+                            self.unrealcv.set_obj_color(obj, (0, 0, 0))
+                        except:
+                            pass
+                else:
+                    random_color=color = np.random.randint(100, 255, 3)
+                    if obj not in self.objects_list and obj not in self.player_list:
+                        try:
+                            self.unrealcv.set_obj_color(obj, random_color)
+                        except:
+                            pass
         ##############
         time.sleep(1)
         target_pos = self.unrealcv.get_obj_location(self.player_list[self.target_id])
@@ -90,7 +97,6 @@ class Track(UnrealCv_base):
         # reset if cannot see the target at initial frame
         # try:
         #     while self.unwrapped.unrealcv.check_visibility(self.cam_list[self.tracker_id],self.player_list[self.target_id]) == 0:
-        #         # target_locations = self.sample_from_area(self.reset_area, 1)
         #         target_locations = self.sample_init_pose()
         #         self.unrealcv.set_obj_location(self.player_list[self.target_id], target_locations[0])
         #         self.unrealcv.set_cam(self.player_list[self.target_id],
@@ -103,6 +109,7 @@ class Track(UnrealCv_base):
         #         tracker_name = self.player_list[self.tracker_id]
         #         self.unrealcv.set_obj_location(tracker_name, cam_pos_exp)
         #         self.unrealcv.set_obj_rotation(tracker_name, [0, yaw_exp, 0])
+        #         time.sleep(1)
         # except:
         #     pass
 

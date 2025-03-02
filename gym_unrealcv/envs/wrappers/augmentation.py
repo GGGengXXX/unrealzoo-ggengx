@@ -53,11 +53,11 @@ class RandomPopulationWrapper(Wrapper):
             elif env.unwrapped.reset_type==3:
                 env.unwrapped.environment_augmentation(player_mesh=True, player_texture=True, light=True, background_texture=True,layout=False, layout_texture=False)
             elif env.unwrapped.reset_type==4:
-                env.unwrapped.environment_augmentation(player_mesh=True, player_texture=True, light=True, background_texture=True,layout=True, layout_texture=False)
+                env.unwrapped.environment_augmentation(player_mesh=True, player_texture=True, light=True, background_texture=False,layout=True, layout_texture=True)
             elif env.unwrapped.reset_type == 5:
                 env.unwrapped.environment_augmentation(player_mesh=True, player_texture=True, light=True,background_texture=True, layout=True, layout_texture=True)
             elif env.unwrapped.reset_type == 6:
-                env.unwrapped.environment_augmentation(player_mesh=True, player_texture=True, light=True,background_texture=False, layout=True, layout_texture=True)
+                env.unwrapped.environment_augmentation(player_mesh=True, player_texture=True, light=True,background_texture=False, layout=True, layout_texture=False)
 
         states = self.env.reset(**kwargs)
         return states

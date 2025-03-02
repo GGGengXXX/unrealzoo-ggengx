@@ -281,7 +281,7 @@ class Character_API(UnrealCv_API):
     def init_objects(self, objects):
         self.objects_dict = dict()
         for obj in objects:
-            print (obj)
+            # print (obj)
             self.objects_dict[obj] = self.get_obj_location(obj)
         return self.objects_dict
 
@@ -296,16 +296,16 @@ class Character_API(UnrealCv_API):
                 self.set_texture(obstacle, (1, 1, 1), np.random.uniform(0, 1, 3), img_dir, np.random.randint(1, 4))
             # scale
             # self.set_obj_scale(obstacle, np.random.uniform(0.3, 3, 3))
-            self.set_obj_scale(obstacle, np.random.uniform(0.5, 4, 3))
+            self.set_obj_scale(obstacle, np.random.uniform(0.5, 3.5, 3))
 
             # location
             obstacle_loc = [start_area[0], start_area[2], 0]
             while start_area[0] <= obstacle_loc[0] <= start_area[1] and start_area[2] <= obstacle_loc[1] <= start_area[3]:
-                obstacle_loc[0] = np.random.uniform(area[0]+100, area[1]-100)
-                obstacle_loc[1] = np.random.uniform(area[2]+100, area[3]-100)
-                obstacle_loc[2] = np.random.uniform(area[4], area[5]) -100
+                obstacle_loc[0] = np.random.uniform(area[0]+200, area[1]-200)
+                obstacle_loc[1] = np.random.uniform(area[2]+200, area[3]-200)
+                obstacle_loc[2] = np.random.uniform(area[4], area[5]) -150
             self.set_obj_location(obstacle, obstacle_loc)
-            time.sleep(0.01)
+            time.sleep(0.1)
 
     def clean_obstacles(self):
         for obj in self.obstacles:

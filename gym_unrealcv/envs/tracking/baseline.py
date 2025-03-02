@@ -241,7 +241,7 @@ class InternalNavAgent(object):
 
         distance_tmp = np.linalg.norm(np.array(self.pose_last) - np.array(pose))
         self.pose_last = pose
-        if self.check_reach(self.goal, pose) or self.step_counter > self.max_len or distance_tmp<1:
+        if self.check_reach(self.goal, pose) or self.step_counter > self.max_len: # or distance_tmp<1:
             # sample a new goal
             # self.goal = self.generate_goal()
             self.goal = np.array(random.choice(self.env.unwrapped.safe_start))

@@ -296,7 +296,7 @@ class Character_API(UnrealCv_API):
                 self.set_texture(obstacle, (1, 1, 1), np.random.uniform(0, 1, 3), img_dir, np.random.randint(1, 4))
             # scale
             # self.set_obj_scale(obstacle, np.random.uniform(0.3, 3, 3))
-            self.set_obj_scale(obstacle, np.random.uniform(0.5, 3.5, 3))
+            self.set_obj_scale(obstacle, np.random.uniform(2, 4, 3))
 
             # location
             obstacle_loc = [start_area[0], start_area[2], 0]
@@ -432,16 +432,7 @@ class Character_API(UnrealCv_API):
             return cmd
         else:
             self.client.request(cmd, -1)
-    def Is_picked(self,player,return_cmd = False):
-        cmd = f'vbp {player} is_picked'
-        if return_cmd:
-            return cmd
-        else:
-            res = self.client.request(cmd)
-            if '1' in res:
-                return True
-            if '0' in res:
-                return False
+
     def is_carrying(self,player,return_cmd = False):
         cmd = f'vbp {player} is_carrying'
         if return_cmd:
@@ -453,6 +444,24 @@ class Character_API(UnrealCv_API):
             if '0' in res:
                 return False
 
+
+    def set_pickup(self, player):
+        #pick up the interactive object when reaching the pickable range
+        cmd = f'vbp {player} set_pickup'
+        res = self.client.request(cmd, -1)
+        return res
+
+    def Is_picked(self,object,return_cmd = False):
+        #query the object state, if the object is successfully picked ?
+        cmd = f'vbp {object} is_picked'
+        if return_cmd:
+            return cmd
+        else:
+            res = self.client.request(cmd)
+            if '1' in res:
+                return True
+            if '0' in res:
+                return False
     def set_viewport(self, player):
         # set the game window to the player's view
         cmd = f'vbp {player} set_viewport'
@@ -513,8 +522,8 @@ class Character_API(UnrealCv_API):
             if use_depth:
                 # image = 1 / self.decoder.decode_depth(res_list[start_point],bytesio=False)
                 # image = self.decoder.decode_depth(res_list[start_point],bytesio=False)
-                image = self.get_depth(cam_id,show=False)
-                image = np.expand_dims(image, axis=-1)
+                image = 1/self.get_depth(cam_id,show=False)
+                # image = np.expand_dims(image, axis=-1)
                 depth_list.append(image)  # 500 is the default max depth of most depth cameras
                 # depth_list.append(res_list[start_point])  # 500 is the default max depth of most depth cameras
                 start_point += 1

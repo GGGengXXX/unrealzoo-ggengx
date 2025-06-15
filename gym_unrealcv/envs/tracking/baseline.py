@@ -5,6 +5,7 @@ import gym
 from gym_unrealcv.envs.utils import misc
 import numpy as np
 from random import choice
+from gym_unrealcv.envs.utils import misc
 
 class RandomAgent(object):
     """The world's simplest agent!"""
@@ -243,8 +244,15 @@ class InternalNavAgent(object):
         self.pose_last = pose
         if self.check_reach(self.goal, pose) or self.step_counter > self.max_len: # or distance_tmp<1:
             # sample a new goal
-            # self.goal = self.generate_goal()
-            self.goal = np.array(random.choice(self.env.unwrapped.safe_start))
+            self.goal = self.generate_goal()
+
+            # constrain goal generated direction
+            # angle = misc.get_direction(pose,self.goal)
+            # # print(angle)
+            # while (misc.get_direction(pose,self.goal) > 0 and misc.get_direction(pose,self.goal)< 90) or (misc.get_direction(pose,self.goal) < 0 and misc.get_direction(pose,self.goal)> -90):
+            #     self.goal = self.generate_goal()
+
+            # self.goal = np.array(random.choice(self.env.unwrapped.safe_start))
             # print('Sample new NavGoal:',self.goal)
             self.step_counter = 0
             return self.goal
@@ -286,7 +294,7 @@ class InternalNavAgent(object):
         #     z = np.random.randint(goal_area[4], goal_area[5])
         #     goal = np.array([x, y, z])
 
-        x, y, z = self.env.unwrapped.unrealcv.generate_nav_goal(self.env.unwrapped.player_list[self.env.unwrapped.target_id], 4000,500)
+        x, y, z = self.env.unwrapped.unrealcv.generate_nav_goal(self.env.unwrapped.player_list[self.env.unwrapped.target_id], 1000,500)
         goal = np.array([x, y, z])
         # print('NavMesh Generated goal:', goal)
         return goal
@@ -304,8 +312,8 @@ class Nav2GoalAgent(object):
             self.discrete = True
         else:
             self.discrete = False
-            self.velocity_high = action_space.high[1]-40
-            self.velocity_low = 0
+            self.velocity_high = action_space.high[1]
+            self.velocity_low = action_space.low[1]
             self.angle_high = action_space.high[0]
             self.angle_low = action_space.low[0]
         self.goal_area = goal_area

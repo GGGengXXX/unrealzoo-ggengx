@@ -201,6 +201,14 @@ class Character_API(UnrealCv_API):
         while res is None:
             res = self.client.request(cmd, -1)
 
+    def set_rotation(self,obj,yaw):
+        #set drone's rotation ('set_obj_rotation' doesn't work for drone)
+        cmd = f'vbp {obj} set_rotation {yaw}'
+        res = None
+        while res is None:
+            res = self.client.request(cmd, -1)
+
+
     def simulate_physics(self, objects):
         res = [self.set_phy(obj, 1) for obj in objects]
 
@@ -296,7 +304,7 @@ class Character_API(UnrealCv_API):
                 self.set_texture(obstacle, (1, 1, 1), np.random.uniform(0, 1, 3), img_dir, np.random.randint(1, 4))
             # scale
             # self.set_obj_scale(obstacle, np.random.uniform(0.3, 3, 3))
-            self.set_obj_scale(obstacle, np.random.uniform(0.5, 3.5, 3))
+            self.set_obj_scale(obstacle, np.random.uniform(2, 5, 3))
 
             # location
             obstacle_loc = [start_area[0], start_area[2], 0]
@@ -360,7 +368,7 @@ class Character_API(UnrealCv_API):
         # Assign the agent a navigation goal, and use Navmesh to automatically control its movement to reach the goal via the shortest path.
         # The goal should be reachable in the environment.
         x, y, z = loc
-        cmd = f'vbp {obj} nav_to_goal {x} {y} {z}'
+        cmd = f'vbp {obj} nav_to_goal_bypath {x} {y} {z}'
         res = self.client.request(cmd, -1)
         return res
     def nav_to_random(self, obj, radius, loop): # navigate the agent to a random location
@@ -477,13 +485,16 @@ class Character_API(UnrealCv_API):
             if use_color:
                 cmd_list.append(self.get_image(cam_id, 'lit', 'bmp', return_cmd=True))
             if use_mask:
-                cmd_list.append(self.get_image(cam_id, 'object_mask', 'bmp', return_cmd=True))
+                cmd_list.append(self.get_image(cam_id, 'object_mask', 'png', return_cmd=True))
             if use_depth:
                 cmd_list.append(f'vget /camera/{cam_id}/depth npy')
                 # cmd_list.append(self.get_image(cam_id, 'depth', 'bmp', return_cmd=True))
 
         decoders = [self.decoder.decode_map[self.decoder.cmd2key(cmd)] for cmd in cmd_list]
-        res_list = self.batch_cmd(cmd_list, decoders)
+        try:
+            res_list = self.batch_cmd(cmd_list, decoders)
+        except:
+            print('batch cmd error')
         obj_pose_list = []
         cam_pose_list = []
         img_list = []
@@ -592,7 +603,7 @@ class Character_API(UnrealCv_API):
         return mask_percent
     def read_image(self, cam_id, viewmode, mode='direct'):
             # cam_id:0 1 2 ...
-            # viewmode:lit,  =normal, depth, object_mask
+            # viewmode:lit,  normal, depth, object_mask
             # mode: direct, file
             res = None
             if mode == 'direct': # get image from unrealcv in png format

@@ -30,6 +30,7 @@ class NavAgents(Wrapper):
                 goal = self.agents[idx].act(env.obj_poses[idx])
                 if goal is not None:
                     env.unwrapped.unrealcv.nav_to_goal(env.player_list[idx], goal)
+                    # env.unwrapped.unrealcv.nav_to_goal_bypath(env.player_list[idx], goal)
                     # env.unwrapped.unrealcv.set_speed(env.player_list[idx], 200)
                 new_action.append(None)
             elif mode == 2:

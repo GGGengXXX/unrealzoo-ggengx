@@ -110,7 +110,7 @@ maps = ['Greek_Island', 'supermarket', 'Brass_Gardens', 'Brass_Palace', 'Brass_S
             'QA_Holding_Cells_A', 'MiddleEast','track_train','Demo_Roof','demonstration_BUNKER','Map_ChemicalPlant_1','Old_Town','ParkingLot'
             ]
 
-Tasks = ['Rendezvous', 'Rescue', 'Track','Navigation']
+Tasks = ['Rendezvous', 'Rescue', 'Track','Navigation','NavigationMulti']
 Observations = ['Color', 'Depth', 'Rgbd', 'Gray', 'CG', 'Mask', 'Pose','MaskDepth','ColorMask']
 Actions = ['Discrete', 'Continuous', 'Mixed']
 # Env for general purpose active object tracking

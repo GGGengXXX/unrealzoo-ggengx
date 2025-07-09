@@ -250,7 +250,7 @@ Up Arrow(⬆️): Look up.
 Down Arrow(⬇️): Look down.  
 (Double "Jump" will trigger the agent to climb)
 ```
-python ./example/keyboard_Navigationagent.py -e UnrealNavigation-Demo_Roof-MixedColor-v0
+python ./example/Keyboard_NavigationAgent.py -e UnrealNavigation-Demo_Roof-MixedColor-v0
 ```
 Control the agent to navigate to the target location by using the keyboard. 
 

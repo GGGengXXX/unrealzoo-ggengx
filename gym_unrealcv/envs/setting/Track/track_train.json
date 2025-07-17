@@ -1,6 +1,6 @@
 {
     "env_name": "track_train",
-    "env_bin": "UE4_ExampleScene_Linux/UE4_ExampleScene/Binaries/Linux/UE4_ExampleScene",
+    "env_bin": "UE4_ExampleScene_Linux_0416_25/UE4_ExampleScene/Binaries/Linux/UE4_ExampleScene",
     "env_map": "track_train",
     "env_bin_win": "UE4_ExampleScene_Win\\UE4_ExampleScene\\Binaries\\Win64\\UE4_ExampleScene.exe",
     "env_bin_mac": "UE4_ExampleScene_Mac/UE4_ExampleScene.app",
@@ -206,7 +206,7 @@
             ],
             "relative_rotation": [
                 0,
-                0,
+                -10,
                 0
             ],
             "move_action": [

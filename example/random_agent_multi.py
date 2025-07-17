@@ -1,6 +1,6 @@
 # place multiple agent in the environment, each agent share the same action space
 # each agent perform randome action in the environment
-
+import os
 import argparse
 import gym_unrealcv
 import gym
@@ -30,10 +30,11 @@ class RandomAgent(object):
         self.action = self.action_space.sample()
         self.count_steps = 0
 
-
+import os
+os.environ['UnrealEnv']='/home/wuk/UnrealEnv'
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=None)
-    parser.add_argument("-e", "--env_id", nargs='?', default='UnrealTrack-track_train-ContinuousColor-v5',
+    parser.add_argument("-e", "--env_id", nargs='?', default='UnrealTrack-MiddleEast-ContinuousColor-v0',
                         help='Select the environment to run')
     parser.add_argument("-r", '--render', dest='render', action='store_true', help='show env using cv2')
     parser.add_argument("-s", '--seed', dest='seed', default=0, help='random seed')
@@ -54,7 +55,7 @@ if __name__ == '__main__':
     if args.monitor:
         env = monitor.DisplayWrapper(env)
 
-    env = augmentation.RandomPopulationWrapper(env, 2, 10, random_target=False)
+    env = augmentation.RandomPopulationWrapper(env, 2, 2, random_target=False)
     if args.nav_agent:
         env = agents.NavAgents(env, mask_agent=False)
     episode_count = 100

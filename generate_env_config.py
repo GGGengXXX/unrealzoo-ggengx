@@ -163,14 +163,12 @@ env_config = {
         "interactive_door": []
     }
 }
-
+import os
+os.environ['UnrealEnv']='/home/wuk/UnrealEnv'
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    # parser.add_argument('--env-bin', default='UE4_ExampleScene_Win/UE4_ExampleScene/Binaries/Win64/UE4_ExampleScene.exe', help='The path to the UE4Editor binary')
-    parser.add_argument('--env-bin', default='UE5_ExampleScene_Win64\Compile_unrealcv5_4\Binaries\Win64\Compile_unrealcv5_4.exe', help='The path to the UE4Editor binary')
-    # parser.add_argument('--env-bin', default='Collection_WinNoEditor\WindowsNoEditor\Collection\Binaries\Win64\Collection.exe', help='The path to the UE4Editor binary')
-
-    parser.add_argument('--env-map', default='Demo_Roof', help='The map to load')
+    parser.add_argument('--env-bin', default='Collection_v4_LinuxNoEditor/Collection/Binaries/Linux/Collection', help='The path to the UE4Editor binary')
+    parser.add_argument('--env-map', default='ParkingLot', help='The map to load')
     parser.add_argument('--target_dir', default='gym_unrealcv/envs/setting/track', help='The folder to save the json file')
     parser.add_argument('--use-docker', action='store_true', help='Run the game in a docker container')
     parser.add_argument('--resolution', '-res', default='640x480', help='The resolution in the unrealcv.ini file')

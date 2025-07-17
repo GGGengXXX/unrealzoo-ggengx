@@ -423,16 +423,16 @@ class UnrealCv_base(gym.Env):
         # print(f'remove {name}')
         agent_index = self.player_list.index(name)
         self.player_list.remove(name)
+        last_cam_list=self.cam_list
         self.cam_list = self.remove_cam(name)
         self.action_space.pop(agent_index)
         self.observation_space.pop(agent_index)
         self.unrealcv.destroy_obj(name)  # the agent is removed from the scene
         self.agents.pop(name)
         st_time=time.time()
-        while self.unrealcv.get_camera_num() >len(self.cam_list)+1:
-            if (time.time() - st_time) > 100:
-                print('remove agent timeout')
-                break
+        time.sleep(1)
+        while self.unrealcv.get_camera_num() >len(last_cam_list)+1: #UE4 需要+1 ,UE5 不用?
+            print('waiting for remove camera')
             pass
 
 

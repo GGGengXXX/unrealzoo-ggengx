@@ -5,7 +5,7 @@ UnrealZoo: Enriching Photo-realistic Virtual Worlds for Embodied AI
 # 🔥 News
 - New Download Link in 🤖ModelScope is released for fast downloading the UE4/UE5 binary.
 - Paper Link: [UnrealZoo: Enriching Photo-realistic Virtual Worlds for Embodied AI](https://arxiv.org/abs/2412.20977)
-- Comprehensive documentation is available in [Doc](/doc) 
+- Comprehensive documentation and Scene Gallery are available in [Notion Page](/doc) 
 - Project website is available at [UnrealZoo](https://unrealzoo.github.io/)
 
 
@@ -250,7 +250,7 @@ Up Arrow(⬆️): Look up.
 Down Arrow(⬇️): Look down.  
 (Double "Jump" will trigger the agent to climb)
 ```
-python ./example/keyboard_Navigationagent.py -e UnrealNavigation-Demo_Roof-MixedColor-v0
+python ./example/Keyboard_NavigationAgent.py -e UnrealNavigation-Demo_Roof-MixedColor-v0
 ```
 Control the agent to navigate to the target location by using the keyboard. 
 

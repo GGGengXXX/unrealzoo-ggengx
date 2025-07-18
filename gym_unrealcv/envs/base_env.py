@@ -203,6 +203,7 @@ class UnrealCv_base(gym.Env):
             self.unrealcv.set_cam(obj, self.agents[obj]['relative_location'], self.agents[obj]['relative_rotation'])
 
         # 匹配真正cam
+        self.unrealcv.cam = self.unrealcv.get_camera_config()
         self.update_camera_assignments()
         # set global view to the top location
         self.set_topview(init_poses[self.protagonist_id], self.cam_id[0])
@@ -774,7 +775,8 @@ class UnrealCv_base(gym.Env):
         """
         # 获取所有相机位置
         cam_locs = []
-        for cam_id in range(self.unrealcv.get_camera_num()):
+        for cam_id in range(1,self.unrealcv.get_camera_num()):
+            print(cam_id)
             cam_loc = self.unrealcv.get_cam_location(cam_id)
             cam_locs.append(cam_loc)
 

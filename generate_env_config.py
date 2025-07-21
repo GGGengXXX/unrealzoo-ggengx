@@ -146,6 +146,7 @@ motorbike_config = {
     }
 }
 
+
 agents = {
     "player": player_config,
     "animal": animal_config,
@@ -244,7 +245,10 @@ if __name__ == '__main__':
             "random_init": False,
             "env": {
                 "interactive_door": [],
-                "Extra_Vehicles":Addition_Vechicles
+                "Extra_Vehicles":Addition_Vechicles,
+                "Pickable_object":{
+                    "class_name": "BP_GrabMoveDrop_C",
+                }
             }
         }
 

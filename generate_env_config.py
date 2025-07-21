@@ -7,6 +7,9 @@ import argparse
 import json
 import copy
 import numpy as np
+import os
+os.environ['UnrealEnv']='/home/wuk/DataDisk/UnrealEnv/'
+
 '''
 An example to show how to use the UnrealCV API to launch the game and run some functions
 '''
@@ -14,8 +17,20 @@ class_name = {
     "player": "bp_character_C",
     "animal": "BP_animal_C",
     "drone": "BP_drone01_C",
-    "car": "BP_BaseCar_C",
-    "motorbike": "MotorBikes_C",
+    # "car": "BP_BaseCar_C", #for UE4 binary`
+    # "motorbike": "MotorBikes_C",#for UE4 binary
+
+    "car":"BP_Hatchback_child_base_C", #for UE5.5 binary
+    "motorbike": "BP_BaseBike_C",#for UE5.5 binary
+}
+Addition_Vechicles={ #only available in latest UE5.5 package
+       "car":["BP_Hatchback_child_extras_C","BP_Hatchback_child_police_C","BP_Hatchback_child_taxi_C",
+            "BP_Sedan_child_base_C","BP_Sedan_child_extras_C","BP_Sedan_child_police_C","BP_Sedan_child_taxi_C",
+            "BP_SUV_child_base_C","BP_SUV_child_extras_C","BP_SUV_child_police_C","BP_SUV_child_taxi_C"],
+    "motorbike":["BP_Custom_Base_C","BP_Custom_Extras_C","BP_Custom_Police_C"
+                ,"BP_Enduro_Base_C","BP_Enduro_Extras_C","BP_Enduro_Police_C"
+                  ,"BP_Naked_Base_C","BP_Naked_Extras_C","BP_Naked_Police_C"
+                  ,"BP_BaseBike_TwoPassengers_C"]
 }
 
 player_config = {
@@ -139,37 +154,18 @@ agents = {
     "motorbike": motorbike_config
 }
 
-env_config = {
-    "env_name": None,
-    "env_bin": None,
-    "env_map": None,
-    "env_bin_win": None,
-    "env_bin_mac": None,
-    "third_cam": {
-        "cam_id": 0,
-        "pitch": -90,
-        "yaw": 0,
-        "roll": 0,
-        "height_top_view": 1500,
-        "fov": 90
-    },
-    "height": 500,
-    "interval": 1000,
-    "agents": agents,
-    "safe_start": [],
-    "reset_area": [0, 0, 0, 0, 0, 0],
-    "random_init": False,
-    "env": {
-        "interactive_door": []
-    }
-}
-import os
-os.environ['UnrealEnv']='/home/wuk/UnrealEnv'
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--env-bin', default='Collection_v4_LinuxNoEditor/Collection/Binaries/Linux/Collection', help='The path to the UE4Editor binary')
-    parser.add_argument('--env-map', default='ParkingLot', help='The map to load')
-    parser.add_argument('--target_dir', default='gym_unrealcv/envs/setting/track', help='The folder to save the json file')
+    # parser.add_argument('--env-bin', default='UE4_ExampleScene_Win/UE4_ExampleScene/Binaries/Win64/UE4_ExampleScene.exe', help='The path to the UE4Editor binary')
+    # parser.add_argument('--env-bin', default='UE5_ExampleScene_Win64\Compile_unrealcv5_4\Binaries\Win64\Compile_unrealcv5_4.exe', help='The path to the UE4Editor binary')
+    # parser.add_argument('--env-bin', default='Collection_WinNoEditor\WindowsNoEditor\Collection\Binaries\Win64\Collection.exe', help='The path to the UE4Editor binary')
+    # parser.add_argument('--env-bin', default='UnrealZoo_UE5_5_Win64_v1.0.1\\UnrealZoo_UE5_5\\Binaries\\Win64\\UnrealZoo_UE5_5.exe', help='The path to the UE4Editor binary')
+    parser.add_argument('--env-bin', default='UnrealZoo_UE5_5_Linux/Linux/UnrealZoo_UE5_5/Binaries/Linux/UnrealZoo_UE5_5', help='The path to the UE4Editor binary')
+
+    parser.add_argument('--env-map', default='Lighthouse', help='The map to load')
+    # parser.add_argument('--target_dir', default='gym_unrealcv/envs/setting/Track', help='The folder to save the json file')
+    parser.add_argument('--target_dir', default='gym_unrealcv/envs/setting/Track', help='The folder to save the json file')
+
     parser.add_argument('--use-docker', action='store_true', help='Run the game in a docker container')
     parser.add_argument('--resolution', '-res', default='640x480', help='The resolution in the unrealcv.ini file')
     parser.add_argument('--display', default=None, help='The display to use')
@@ -182,19 +178,33 @@ if __name__ == '__main__':
     env_bin = args.env_bin
     env_map = args.env_map
     if args.env_map == 'all':
-        maps = ['Greek_Island', 'supermarket', 'Brass_Gardens', 'Brass_Palace', 'Brass_Streets',
-                'EF_Gus', 'EF_Lewis_1', 'EF_Lewis_2', 'EF_Grounds', 'Eastern_Garden', 'Western_Garden', 'Colosseum_Desert',
-                'Desert_ruins', 'SchoolGymDay', 'Venice', 'TrainStation', 'Stadium', 'IndustrialArea', 'ModularBuilding',
-                'TemplePlaza', 'DowntownWest', 'TerrainDemo', 'InteriorDemo_NEW', 'AncientRuins', 'Grass_Hills', 'ChineseWaterTown_Ver1',
-                'ContainerYard_Night', 'ContainerYard_Day', 'Old_Factory_01', 'racing_track', 'Watermills', 'WildWest',
-                'SunsetMap', 'Hospital', 'Medieval_Castle', 'Real_Landscape', 'UndergroundParking', 'Demonstration_Castle',
-                'Demonstration_Cave', 'Arctic', 'Medieval_Daytime', 'Medieval_Nighttime', 'ModularGothic_Day', 'ModularGothic_Night',
-                'UltimateFarming', 'RuralAustralia_Example_01', 'RuralAustralia_Example_02', 'RuralAustralia_Example_03',
-                'LV_Soul_Cave', 'Dungeon_Demo_00', 'SwimmingPool', 'DesertMap', 'RainMap', 'SnowMap', 'ModularVictorianCity_scene1',
-                'SuburbNeighborhood_Day', 'SuburbNeighborhood_Night', 'ModularSciFiVillage', 'Storagehouse', 'OceanFloor',
-                'ModularNeighborhood', 'ModularSciFiVillage', 'ModularSciFiSeason1', 'LowPolyMedievalInterior_1',
-                'QA_Holding_Cells_A', 'ParkingLot','Map_ChemicalPlant_1','MiddleEast'
-                ]
+        maps = [
+            'Greek_Island', 'supermarket', 'Brass_Gardens', 'Brass_Palace', 'Brass_Streets',
+            'EF_Gus', 'EF_Lewis_1', 'EF_Lewis_2', 'EF_Grounds', 'TemplePlaza', 'Eastern_Garden', 'Western_Garden',
+            'Colosseum_Desert',
+            'Desert_ruins', 'SchoolGymDay', 'Venice', 'VictorianTrainStation', 'Stadium', 'IndustrialArea',
+            'ModularBuilding',
+            'DowntownWest', 'TerrainDemo', 'InteriorDemo_NEW', 'AncientRuins', 'Grass_Hills', 'ChineseWaterTown_Ver1',
+            'ContainerYard_Night', 'ContainerYard_Day', 'Old_Factory_01', 'racing_track', 'Watermills', 'WildWest',
+            'SunsetMap', 'Hospital', 'Medieval_Castle', 'Real_Landscape', 'UndergroundParking', 'Demonstration_Castle',
+            'Demonstration_Cave', 'PlatFormHangar', 'PlatformFactory', 'demonstration_BUNKER', 'Arctic',
+            'Medieval_Daytime',
+            'Medieval_Nighttime', 'ModularGothic_Day', 'ModularGothic_Night',
+            'UltimateFarming', 'RuralAustralia_Example_01', 'RuralAustralia_Example_02', 'RuralAustralia_Example_03',
+            'LV_Soul_Cave', 'Dungeon_Demo_00', 'SwimmingPool', 'DesertMap', 'RainMap', 'SnowMap',
+            'ModularVictorianCity',
+            'SuburbNeighborhood_Day', 'SuburbNeighborhood_Night', 'Storagehouse', 'ModularNeighborhood',
+            'ModularSciFiVillage', 'ModularSciFiSeason1', 'LowPolyMedievalInterior_1', 'QA_Holding_Cells_A',
+            'ParkingLot', 'Demo_Roof', 'MiddleEast', 'Lighthouse',
+            'Cabin_Lake', 'UniversityClassroom', 'Tokyo', 'CommandCenter', 'JapanTrainStation_Optimised',
+            'Hotel_Corridor', 'Museum', 'ForestGasStation',
+            'KoreanPalace', 'CourtYard', 'Chinese_Landscape_Demo', 'EnglishCollege', 'OperaHouse', 'AsianTemple',
+            'Pyramid', 'PlanetOutDoor',
+            'Map_ChemicalPlant_1', 'Hangar', 'Science_Fiction_valley_town', 'RussianWinterTownDemo01', 'LookoutTower',
+            'LV_Bazaar', 'OperatingRoom',
+            'PostSoviet_Village', 'Old_Town', 'AsianMedivalCity', 'StonePineForest', 'TemplesOfCambodia_01_01_Exterior',
+            'AbandonedDistrict'
+        ]
         env_map = maps[0]
     else:
         maps = [env_map]
@@ -233,7 +243,8 @@ if __name__ == '__main__':
             "reset_area": [0, 0, 0, 0, 0, 0],
             "random_init": False,
             "env": {
-                "interactive_door": []
+                "interactive_door": [],
+                "Extra_Vehicles":Addition_Vechicles
             }
         }
 
@@ -332,12 +343,12 @@ if __name__ == '__main__':
                 agents['drone']['cam_id'].append(match_cam_id(cam_locs, obj))
                 agents['drone']['class_name'].append(class_name['drone'])
                 # env_config['safe_start'].append(unrealcv.get_obj_location(obj))
-            elif re.match(re.compile(r'bp_basecar', re.I), obj) is not None:
+            elif re.match(re.compile(r'bp_basecar|BP_Hatchback', re.I), obj) is not None:
                 agents['car']['name'].append(obj)
                 agents['car']['cam_id'].append(match_cam_id(cam_locs, obj))
                 agents['car']['class_name'].append(class_name['car'])
                 start_pos_list.append(unrealcv.get_obj_location(obj))
-            elif re.match(re.compile(r'sport', re.I), obj) is not None or re.match(re.compile(r'motorbike', re.I), obj) is not None:
+            elif re.match(re.compile(r'sport|motorbike|BP_BaseBike', re.I), obj) is not None:
                 agents['motorbike']['name'].append(obj)
                 agents['motorbike']['cam_id'].append(match_cam_id(cam_locs, obj))
                 agents['motorbike']['class_name'].append(class_name['motorbike'])

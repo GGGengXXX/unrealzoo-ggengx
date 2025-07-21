@@ -199,8 +199,13 @@ class UnrealCv_base(gym.Env):
         init_poses = self.sample_init_pose(self.random_init, len(self.player_list))
         for i, obj in enumerate(self.player_list):
             self.unrealcv.set_obj_location(obj, init_poses[i])
-        # set view point
+            # set view point
             self.unrealcv.set_cam(obj, self.agents[obj]['relative_location'], self.agents[obj]['relative_rotation'])
+
+        # 匹配真正cam
+        self.unrealcv.cam = self.unrealcv.get_camera_config()
+        self.update_camera_assignments()
+        # set global view to the top location
         self.set_topview(init_poses[self.protagonist_id], self.cam_id[0])
         # get state
         observations, self.obj_poses, self.img_show = self.update_observation(self.player_list, self.cam_list, self.cam_flag, self.observation_type)
@@ -431,9 +436,10 @@ class UnrealCv_base(gym.Env):
         self.agents.pop(name)
         st_time=time.time()
         time.sleep(1)
+        print(f'waiting for remove agent {name}...')
         while self.unrealcv.get_camera_num() >len(last_cam_list)+1: #UE4 需要+1 ,UE5 不用?
-            print('waiting for remove camera')
             pass
+        print('Remove finished!')
 
 
 
@@ -753,3 +759,43 @@ class UnrealCv_base(gym.Env):
                 cam_pos_exp[1] = y
                 return cam_pos_exp
         return []
+
+    def match_cam_id(cam_locs, obj_name):
+        obj_loc = unrealcv.get_obj_location(obj_name)
+        dis_list = []
+        for loc in cam_locs:
+            distance = unrealcv.get_distance(loc, obj_loc, 3)
+            dis_list.append(distance)
+        cam_id = dis_list.index(min(dis_list))
+        return cam_id
+
+    def update_camera_assignments(self):
+        """
+        更新所有智能体的相机分配，确保每个智能体使用最近的相机
+        """
+        # 获取所有相机位置
+        cam_locs = []
+        for cam_id in range(1,self.unrealcv.get_camera_num()):
+            print(cam_id)
+            cam_loc = self.unrealcv.get_cam_location(cam_id)
+            cam_locs.append(cam_loc)
+
+        # 为每个智能体匹配最近相机并更新
+        for obj in self.player_list:
+            # 获取智能体位置 (包含位置和旋转信息)
+            obj_loc = self.unrealcv.get_obj_location(obj)
+
+            dis_list = []
+            for loc in cam_locs:
+                # 计算距离 (使用3D欧氏距离)
+                distance = self.unrealcv.get_distance(loc, obj_loc, 3)
+                dis_list.append(distance)
+
+            # 找到最小距离的索引 (即相机ID)
+            nearest_cam_id = dis_list.index(min(dis_list))
+
+            # 更新智能体的相机ID
+            self.agents[obj]['cam_id'] = nearest_cam_id
+            # 更新cam_list中对应的相机ID
+            agent_idx = self.player_list.index(obj)
+            self.cam_list[agent_idx] = nearest_cam_id

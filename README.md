@@ -1,8 +1,16 @@
 UnrealZoo: Enriching Photo-realistic Virtual Worlds for Embodied AI
 ===
 ![framework](doc/figs/overview.png)
+[FangWei Zhong](https://fangweizhong.xyz/), [Kui Wu](), [Chu-ran Wang ](), [Hao Chen](), [Hai Ci](), [Zhoujun Li](), [Yizhou Wang]()
 
+Beijing Normal University, BeiHang University, Peking University, National University of Singapore and The Hong Kong Polytechnic University.
+
+ICCV 2025
 # 🔥 News
+- We released the full version of UnrealZoo environment package, built on UE5.5 which contains **100+ scenes**.
+  - **UnrealZoo_UE5_5_V1.0.1** is available for download, which contains 100+ scenes and playable entities, with a total size of **67GB**.
+  - We integrate the latest chaos system for vehicles, enabling more realistic animation(enter/exit) and visual effect(collision, explode, fire, etc.).
+  - The **object interaction(pick/drop)** now is available, you could spawn the object anywhere in the map and interact with it, just use one command to change its appearance.
 - New Download Link in 🤖ModelScope is released for fast downloading the UE4/UE5 binary.
 - Paper Link: [UnrealZoo: Enriching Photo-realistic Virtual Worlds for Embodied AI](https://arxiv.org/abs/2412.20977)
 - Comprehensive documentation and Scene Gallery are available in [Notion Page](/doc) 
@@ -163,16 +171,22 @@ Before running the environments, you need to prepare unreal binaries. To accommo
   </tr>
 </table> 
 
-**Preview-version Environment Package**  
+**Preview-version Environment Package (UE4_Collection_Preview)**  
 The preview-version environment package contains **60+ scene maps** in total, the detailed map name can be found here [EnvLists](doc/EnvLists.md).
+
+**Full version Environment Package (UnrealZoo_UE5_5_V1.0.1)**
+We released the full version of UnrealZoo environment package, built on UE5.5 which contains **100+ scenes**. All maps in the **[scene gallery](https://www.notion.so/Scene-Gallery-a801475ff98943159da66f641f4c38b2)** are included.
+
 
 🗂️**You can load the above binaries using script `python load_env.py -e {Environment}` or from the following link:**
 
-| Environment                       | Download Link                                                                                                                                                                                                                | Size       |
-|-----------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------|
-| UE4_ExampleScene                  | [🤖ModelScope](https://modelscope.cn/datasets/UnrealZoo/UnrealZoo-UE4/files)   | ~3GB       |
-| UE5_ExampleScene                  | [🤖ModelScope](https://modelscope.cn/datasets/UnrealZoo/UnrealZoo-UE5/files)  | ~10GB      |
+| Environment                       | Download Link                                                              | Size       |
+|-----------------------------------|----------------------------------------------------------------------------|------------|
+| UE4_ExampleScene                  | [🤖ModelScope](https://modelscope.cn/datasets/UnrealZoo/UnrealZoo-UE4/files) | ~3GB       |
+| UE5_ExampleScene                  | [🤖ModelScope](https://modelscope.cn/datasets/UnrealZoo/UnrealZoo-UE5/files) | ~10GB      |
 | UE4_Collection_Preview (60+ maps) | [🤖ModelScope](https://modelscope.cn/datasets/UnrealZoo/UnrealZoo-UE4/files) | **\>48GB** |
+| **UnrealZoo_UE5_5_Win64_V1.0.1**  | [Cloud](https://bhpan.buaa.edu.cn/link/AA76893329C22345BD8F4B5365FB10231E) |    ~67GB |
+| **UnrealZoo_UE5_5_Linux_V1.0.1**  | [Cloud]( https://pan.baidu.com/s/1jbiVSf0QYXT12QwbsFyUJg?pwd=5r58)         |    ~67GB |
 
 
 Then unzip and move the downloaded binary to the `UnrealEnv` folder, which is our default location for binaries, the folder structures are as follows:

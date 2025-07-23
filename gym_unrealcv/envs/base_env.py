@@ -441,8 +441,6 @@ class UnrealCv_base(gym.Env):
             pass
         print('Remove finished!')
 
-
-
     def remove_cam(self, name):
         """
         Remove the camera associated with an agent.
@@ -760,14 +758,6 @@ class UnrealCv_base(gym.Env):
                 return cam_pos_exp
         return []
 
-    def match_cam_id(cam_locs, obj_name):
-        obj_loc = unrealcv.get_obj_location(obj_name)
-        dis_list = []
-        for loc in cam_locs:
-            distance = unrealcv.get_distance(loc, obj_loc, 3)
-            dis_list.append(distance)
-        cam_id = dis_list.index(min(dis_list))
-        return cam_id
 
     def update_camera_assignments(self):
         """
@@ -775,7 +765,7 @@ class UnrealCv_base(gym.Env):
         """
         # 获取所有相机位置
         cam_locs = []
-        for cam_id in range(1,self.unrealcv.get_camera_num()):
+        for cam_id in range(0,self.unrealcv.get_camera_num()):
             print(cam_id)
             cam_loc = self.unrealcv.get_cam_location(cam_id)
             cam_locs.append(cam_loc)

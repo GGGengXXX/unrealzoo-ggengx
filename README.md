@@ -1,21 +1,20 @@
 UnrealZoo: Enriching Photo-realistic Virtual Worlds for Embodied AI
 ===
+### ICCV 2025 (Highlights🚀)
+
+[📄 Paper](https://arxiv.org/abs/2412.20977) \| [🌐 Project Page](http://unrealzoo.site/) \| [📝 Document](https://unrealzoo.notion.site/) \| [🤖 ModelScope](https://www.modelscope.cn/organization/UnrealZoo) \| 
+[🎬 YouTube](https://www.youtube.com/watch?v=Xe2VmsJYTAU)
 ![framework](doc/figs/overview.png)
-[FangWei Zhong](https://fangweizhong.xyz/), [Kui Wu](), [Chu-ran Wang ](), [Hao Chen](), [Hai Ci](), [Zhoujun Li](), [Yizhou Wang]()
 
-Beijing Normal University, BeiHang University, Peking University, National University of Singapore and The Hong Kong Polytechnic University.
-
-ICCV 2025
 # 🔥 News
-- We released the full version of UnrealZoo environment package, built on UE5.5 which contains **100+ scenes**.
+- 2025/07 We released the full version of UnrealZoo environment package, built on UE5.5 which contains **100+ scenes**.
   - **UnrealZoo_UE5_5_V1.0.1** is available for download, which contains 100+ scenes and playable entities, with a total size of **67GB**.
   - We integrate the latest chaos system for vehicles, enabling more realistic animation(enter/exit) and visual effect(collision, explode, fire, etc.).
   - The **object interaction(pick/drop)** now is available, you could spawn the object anywhere in the map and interact with it, just use one command to change its appearance.
-- New Download Link in 🤖ModelScope is released for fast downloading the UE4/UE5 binary.
-- Paper Link: [UnrealZoo: Enriching Photo-realistic Virtual Worlds for Embodied AI](https://arxiv.org/abs/2412.20977)
-- Comprehensive documentation and Scene Gallery are available in [Notion Page](/doc) 
-- Project website is available at [UnrealZoo](https://unrealzoo.github.io/)
-
+- 2025/03 New Download Link in 🤖[ModelScope](https://www.modelscope.cn/organization/UnrealZoo) is released for fast downloading the UE4/UE5 binary.
+- 2024/12 Paper Link: [UnrealZoo: Enriching Photo-realistic Virtual Worlds for Embodied AI](https://arxiv.org/abs/2412.20977)
+- 2024/12 Comprehensive documentation and Scene Gallery are available in [Notion Page](https://unrealzoo.notion.site/scene-gallery) 
+- 2024/12 Project website is available at [UnrealZoo](http://unrealzoo.site/)
 
 
 # Table of Contents
@@ -318,11 +317,11 @@ Please refer to the [wrapper](doc/wrapper.md) for more details.
 - We provide a document for adding a new environment in unrealzoo-gym. Please refer to the [addEnv](doc/addEnv.md) for more details.
 
 # 🗓️ TODO List
-- [ ]  Release an all-in-one package of the collected environments
+- [x]  Release an all-in-one package of the collected environments
 - [ ]  Add gym interface for heterogeneous mutli-agent co-operation.
-- [ ]  Expand the list of supported interactive actions.
-- [ ]  Add more detailed examples for reinforcement learning agents.
-- [ ]  Add more detailed examples for large vision-language models.
+- [x]  Expand the list of supported interactive actions.
+- [x]  Add more detailed examples for reinforcement learning agents.
+- [x]  Add more detailed examples for large vision-language models.
 
 ## License and Acknowledgments
 The UnrealZoo project is licensed under the Apache 2.0. 
@@ -341,7 +340,7 @@ We acknowledge the following projects for their contributions to the UnrealZoo p
 If you use UnrealZoo in your research, please consider citing:
 
 ```bibtex
-@misc{zhong2024unrealzooenrichingphotorealisticvirtual,
+@misc{zhong2024unrealzoo,
       title={UnrealZoo: Enriching Photo-realistic Virtual Worlds for Embodied AI}, 
       author={Fangwei Zhong and Kui Wu and Churan Wang and Hao Chen and Hai Ci and Zhoujun Li and Yizhou Wang},
       year={2024},

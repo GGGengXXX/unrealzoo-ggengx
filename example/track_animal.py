@@ -23,9 +23,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
     env = gym.make(args.env_id)
     env.unwrapped.agents_category=['player','animal'] #choose the agent type in the scene
-    #the default target is human, if use animal as target, switch the tracker id and target id (0,1 ->1,0)
-
-
     env = configUE.ConfigUEWrapper(env, offscreen=False, resolution=(240, 240))
     # env.unwrapped.agents_category=['player'] #choose the agent type in the scene
     if int(args.time_dilation) > 0:  # -1 means no time_dilation
@@ -36,7 +33,7 @@ if __name__ == '__main__':
         env = monitor.DisplayWrapper(env)
 
     env = augmentation.RandomPopulationWrapper(env, 2, 2, random_target=False)
-    # env = agents.NavAgents(env, mask_agent=True)
+    env = agents.NavAgents(env, mask_agent=True) #use internal nav system for target moving
     episode_count = 100
     rewards = 0
     done = False
@@ -53,31 +50,26 @@ if __name__ == '__main__':
             # 设置智能体速度
             tracker_name = env.unwrapped.player_list[tracker_id]
             target_name = env.unwrapped.player_list[target_id]
-            env.unwrapped.unrealcv.set_max_speed(tracker_name, 200)  # tracker (player) 速度
             env.unwrapped.unrealcv.set_max_speed(target_name, 100)   # target (animal) 速度
 
             # 使用环境自动设置的 tracker_id 和 target_id
             # tracker_id = 0 (player 追踪者), target_id = 1 (animal 被追踪者)
             print(f'Tracker ID: {tracker_id} ({env.unwrapped.agents_category[tracker_id]}), Target ID: {target_id} ({env.unwrapped.agents_category[target_id]})')
-            print(f'Tracker speed: 200, Target speed: 100')
+            print(f'Tracker speed: 100, Target speed: 100')
 
-            # 为每个智能体创建控制器
-            trackers = [PoseTracker(env.action_space[tracker_id], env.unwrapped.reward_params['exp_distance'])]
-            targets = [Nav2GoalAgent(env.action_space[target_id], env.unwrapped.reset_area, max_len=100)]
+            # 为tracker智能体创建控制器, target 采用内置的导航控制器
+            trackers = PoseTracker(env.action_space[0])
+
             count_step = 0
             t0 = time.time()
             agents_num = len(obs)
             C_rewards = np.zeros(agents_num)
             print('eps:', eps, 'agents_num:', agents_num)
             while True:
+
                 obj_poses = env.unwrapped.obj_poses
-                # 根据 tracker_id 和 target_id 分配动作
-                actions = [None] * agents_num
-                # target 的动作：随机导航
-                actions[target_id] = targets[0].act(obj_poses[target_id])
-                # tracker 的动作：追踪 target
-                actions[tracker_id] = trackers[0].act(obj_poses[tracker_id], obj_poses[target_id])
-                obs, rewards, done, _ = env.step(actions)
+                action = trackers.act(obj_poses[0], obj_poses[1])
+                obs, rewards, done, _ = env.step([action])
                 C_rewards += rewards
                 count_step += 1
                 if args.render:

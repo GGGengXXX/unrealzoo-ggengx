@@ -8,7 +8,7 @@ import numpy as np
 from gym_unrealcv.envs.wrappers import time_dilation, early_done, monitor, agents, augmentation,configUE
 from gym_unrealcv.envs.tracking.baseline import PoseTracker, Nav2GoalAgent
 import os
-os.environ['UnrealEnv']='/home/wuk/DataDisk/UnrealEnv'
+os.environ['UnrealEnv']='/path/to/your/UnrealEnv'
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=None)
@@ -98,5 +98,6 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print('exiting')
         env.close()
+
 
 

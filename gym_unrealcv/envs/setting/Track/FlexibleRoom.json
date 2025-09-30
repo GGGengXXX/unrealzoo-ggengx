@@ -1,9 +1,9 @@
 {
     "env_name": "FlexibleRoom",
-    "env_bin": "UnrealZoo_UE5_5_Linux_v1.0.2/Linux/UnrealZoo_UE5_5/Binaries/Linux/UnrealZoo_UE5_5",
+    "env_bin": "UnrealZoo_UE5_5_Linux_v1.0.4/Linux/UnrealZoo_UE5_5/Binaries/Linux/UnrealZoo_UE5_5",
     "env_map": "FlexibleRoom",
-    "env_bin_win": "UnrealZoo_UE5_5_Win_v1.0.2\\Win\\UnrealZoo_UE5_5\\Binaries\\Win\\UnrealZoo_UE5_5",
-    "env_bin_mac": "UnrealZoo_UE5_5_Linux_v1.0.2/Linux/UnrealZoo_UE5_5/Binaries/Linux/UnrealZoo_UE5_5",
+    "env_bin_win": "UnrealZoo_UE5_5_Win_v1.0.4\\Win\\UnrealZoo_UE5_5\\Binaries\\Win\\UnrealZoo_UE5_5",
+    "env_bin_mac": "UnrealZoo_UE5_5_Linux_v1.0.4/Linux/UnrealZoo_UE5_5/Binaries/Linux/UnrealZoo_UE5_5",
     "third_cam": {
         "cam_id": 0,
         "pitch": -90,
@@ -411,8 +411,13 @@
             193.15
         ],
         [
-            -533.142,
-            -335.912,
+            -842.573,
+            1296.255,
+            152.522
+        ],
+        [
+            -1673.118,
+            1145.227,
             152.522
         ],
         [
@@ -421,52 +426,57 @@
             152.522
         ],
         [
-            -1865.676,
-            -126.923,
-            152.522
-        ],
-        [
-            -1946.561,
-            -468.302,
-            152.522
-        ],
-        [
-            -988.0,
-            -0.0,
-            152.522
-        ],
-        [
-            -750.348,
-            204.819,
-            152.522
-        ],
-        [
-            -0.0,
+            -1976.0,
             1140.0,
             152.522
         ],
         [
-            721.454,
-            383.99,
+            -1527.457,
+            1824.0,
             152.522
         ],
         [
-            -899.097,
-            1320.381,
+            -988.0,
+            988.0,
             152.522
         ],
         [
-            -500.288,
-            152.222,
+            -1932.111,
+            943.651,
             152.522
+        ],
+        [
+            -1586.779,
+            -226.779,
+            152.522
+        ],
+        [
+            -322.67,
+            431.442,
+            152.522
+        ],
+        [
+            -1080.0,
+            1140.0,
+            152.522
+        ],
+        [
+            4760.0,
+            -3670.0,
+            -629.0
+        ],
+        [
+            4720.048,
+            -2880.0,
+            -631.528
         ]
     ],
     "reset_area": [
         -1976.0,
         4760.0,
         -3670.0,
-        1400.0,
-        -633.183,
+        1824.0,
+        -631.528,
         193.15
     ],
     "random_init": false,
@@ -499,11 +509,11 @@
                 "BP_BaseBike_TwoPassengers_C"
             ]
         },
-        "targets": {
-            "Point": []
+        "Pickable_object": {
+            "class_name": "BP_GrabMoveDrop_C"
         }
     },
-    "obj_num": 112,
+    "obj_num": 111,
     "size": 0.0,
     "area": 1952.288,
     "bbox": [

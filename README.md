@@ -233,13 +233,20 @@ We have predefined a naming rule to launch different environment maps and their 
 #### Hint 💡 
 - If your mouse cursor disappears after the game launches, press ``` ` ``` (the key above Tab) to release the mouse cursor from the game.
 
-#### 1. Specify the environment location in the terminal. 
+#### 1. Specify the environment location： 
+ ##### Option 1: In the terminal. 
  - Default path to UnrealEnv is in user home directory under .unrealcv  
    - Windows: C:\\Users\\{username}\\.unrealcv\\UnrealEnv
    - Linux: /home/{username}/.unrealcv/UnrealEnv
    - Mac: /Users/{username}/.unrealcv/UnrealEnv
 ```
 export UnrealEnv=/your/path/to/UnrealEnv
+```
+##### Option 2: In the example code:
+Add environment variable in the example code
+```
+import os
+os.environ['UnrealEnv']="/your/path/to/UnrealEnv"
 ```
 #### 2. Run random agents
 User could choose a map from the available map list, and run the random agent to interact with the environment.

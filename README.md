@@ -7,6 +7,7 @@ UnrealZoo: Enriching Photo-realistic Virtual Worlds for Embodied AI
 ![framework](doc/figs/overview.png)
 
 # 🔥 News
+- 2025/09 We update package to **v1.0.4**, which supports optical flow rendering and fixes some camera-related bugs.  
 - 2025/07 We released the full version of UnrealZoo environment package, built on UE5.5 which contains **100+ scenes**.
   - **UnrealZoo_UE5_5_V1.0.1** is available for download, which contains 100+ scenes and playable entities, with a total size of **67GB**.
   - We integrate the latest chaos system for vehicles, enabling more realistic animation(enter/exit) and visual effect(collision, explode, fire, etc.).
@@ -184,8 +185,8 @@ We released the full version of UnrealZoo environment package, built on UE5.5 wh
 | UE4_ExampleScene                  | [🤖ModelScope](https://modelscope.cn/datasets/UnrealZoo/UnrealZoo-UE4/files) | ~3GB       |
 | UE5_ExampleScene                  | [🤖ModelScope](https://modelscope.cn/datasets/UnrealZoo/UnrealZoo-UE5/files) | ~10GB      |
 | UE4_Collection_Preview (60+ maps) | [🤖ModelScope](https://modelscope.cn/datasets/UnrealZoo/UnrealZoo-UE4/files) | **\>48GB** |
-| **UnrealZoo_UE5_5_Win64_V1.0.1**  | [Cloud](https://bhpan.buaa.edu.cn/link/AA76893329C22345BD8F4B5365FB10231E) |    ~67GB |
-| **UnrealZoo_UE5_5_Linux_V1.0.1**  | [Cloud]( https://pan.baidu.com/s/1jbiVSf0QYXT12QwbsFyUJg?pwd=5r58)         |    ~67GB |
+| **UnrealZoo_UE5_5_Win64_V1.0.4**  | [Cloud](https://pan.baidu.com/s/11myDa5iY1xi0OLziOZi-Nw?pwd=ae7w)         |    ~67GB |
+| **UnrealZoo_UE5_5_Linux_V1.0.4**  | [Cloud](https://pan.baidu.com/s/1pWJO9PJdT8_kEn6Y0zq9yg?pwd=x5fd)         |    ~67GB |
 
 
 Then unzip and move the downloaded binary to the `UnrealEnv` folder, which is our default location for binaries, the folder structures are as follows:

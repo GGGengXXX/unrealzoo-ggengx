@@ -187,7 +187,7 @@ We released the full version of UnrealZoo environment package, built on UE5.5 wh
 | UE4_Collection_Preview (60+ maps) | [🤖ModelScope](https://modelscope.cn/datasets/UnrealZoo/UnrealZoo-UE4/files) | **\>48GB** |
 |**UnrealZoo_UE5_5_Mac_V1.0.3** | [Cloud](https://pan.baidu.com/s/1lUqQYEkn7mfXd8G8F2tQGA?pwd=xvxh)|    ~67GB |
 | **UnrealZoo_UE5_5_Win64_V1.0.4**  | [Cloud](https://pan.baidu.com/s/11myDa5iY1xi0OLziOZi-Nw?pwd=ae7w)         |    ~67GB |
-| **UnrealZoo_UE5_5_Linux_V1.0.4**  | [Cloud](https://pan.baidu.com/s/1pWJO9PJdT8_kEn6Y0zq9yg?pwd=x5fd)         |    ~67GB |
+| **UnrealZoo_UE5_5_Linux_V1.0.5**  | [🤖ModelScope](https://modelscope.cn/datasets/UnrealZoo/UnrealZoo-UE5/files) |    ~72GB |
 
 
 Then unzip and move the downloaded binary to the `UnrealEnv` folder, which is our default location for binaries, the folder structures are as follows:

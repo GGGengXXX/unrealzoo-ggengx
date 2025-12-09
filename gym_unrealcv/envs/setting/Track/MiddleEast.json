@@ -1,18 +1,18 @@
 {
     "env_name": "MiddleEast",
-    "env_bin": "UE5_ExampleScene_Linux/Linux/Compile_unrealcv5_4/Binaries/Linux/Compile_unrealcv5_4",
+    "env_bin": "UnrealZoo_UE5_5_Linux_v1.0.5/Linux/UnrealZoo_UE5_5/Binaries/Linux/UnrealZoo_UE5_5",
     "env_map": "MiddleEast",
-    "env_bin_win": "UE5_ExampleScene_Win\\Win\\Compile_unrealcv5_4\\Binaries\\Win\\Compile_unrealcv5_4",
-    "env_bin_mac": "UE5_ExampleScene_Linux/Linux/Compile_unrealcv5_4/Binaries/Linux/Compile_unrealcv5_4",
+    "env_bin_win": "UnrealZoo_UE5_5_Win_v1.0.5\\Win\\UnrealZoo_UE5_5\\Binaries\\Win\\UnrealZoo_UE5_5",
+    "env_bin_mac": "UnrealZoo_UE5_5_Linux_v1.0.5/Linux/UnrealZoo_UE5_5/Binaries/Linux/UnrealZoo_UE5_5",
     "third_cam": {
         "cam_id": 0,
         "pitch": -90,
         "yaw": 0,
         "roll": 0,
-        "height_top_view": 1960.0,
+        "height_top_view": 2130.0,
         "fov": 90
     },
-    "height": 960.0,
+    "height": 1130.0,
     "interval": 1000,
     "agents": {
         "player": {
@@ -32,7 +32,7 @@
                 1
             ],
             "relative_location": [
-                0,
+                20,
                 0,
                 0
             ],
@@ -216,36 +216,109 @@
     },
     "safe_start": [
         [
-            -959.0,
-            -655.0,
-            300.907
+            -1070.0,
+            -1250.0,
+            262.907
         ],
         [
-            -1018.0,
-            -741.0,
-            300.0
+            -1209.359,
+            -1554.376,
+            235.534
         ],
-        [-2612,1676,300],
-        [1555,2085,300]
+        [
+            -577.065,
+            -584.533,
+            252.647
+        ],
+        [
+            -1290.896,
+            -2090.612,
+            1130.0
+        ],
+        [
+            -1831.609,
+            -2838.817,
+            190.0
+        ],
+        [
+            -2568.158,
+            -149.219,
+            198.184
+        ],
+        [
+            -1454.507,
+            -12.74,
+            620.0
+        ],
+        [
+            -1001.197,
+            -2128.0,
+            230.434
+        ],
+        [
+            -1454.8,
+            -480.4,
+            245.474
+        ],
+        [
+            -1465.984,
+            -2703.025,
+            561.547
+        ],
+        [
+            342.0,
+            -971.948,
+            820.0
+        ]
     ],
     "reset_area": [
-        -2522.432,
-        -10.125,
-        -2849.173,
-        80.847,
+        -2568.158,
+        342.0,
+        -2838.817,
+        -12.74,
         190.0,
-        960.0
+        1130.0
     ],
     "random_init": false,
     "env": {
-        "interactive_door": []
+        "interactive_door": [],
+        "Extra_Vehicles": {
+            "car": [
+                "BP_Hatchback_child_extras_C",
+                "BP_Hatchback_child_police_C",
+                "BP_Hatchback_child_taxi_C",
+                "BP_Sedan_child_base_C",
+                "BP_Sedan_child_extras_C",
+                "BP_Sedan_child_police_C",
+                "BP_Sedan_child_taxi_C",
+                "BP_SUV_child_base_C",
+                "BP_SUV_child_extras_C",
+                "BP_SUV_child_police_C",
+                "BP_SUV_child_taxi_C"
+            ],
+            "motorbike": [
+                "BP_Custom_Base_C",
+                "BP_Custom_Extras_C",
+                "BP_Custom_Police_C",
+                "BP_Enduro_Base_C",
+                "BP_Enduro_Extras_C",
+                "BP_Enduro_Police_C",
+                "BP_Naked_Base_C",
+                "BP_Naked_Extras_C",
+                "BP_Naked_Police_C",
+                "BP_BaseBike_TwoPassengers_C"
+            ]
+        },
+        "Pickable_object": {
+            "class_name": "BP_GrabMoveDrop_C"
+        }
     },
     "obj_num": 1292,
-    "size": 623756.016,
+    "size": 620827.5839999999,
     "area": 29284.319999999996,
     "bbox": [
         148.2,
         197.6,
-        21.3
+        21.2
     ]
 }

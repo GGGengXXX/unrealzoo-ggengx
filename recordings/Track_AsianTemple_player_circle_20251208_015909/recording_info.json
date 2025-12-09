@@ -1,0 +1,54 @@
+{
+  "env_id": "UnrealTrack-AsianTemple-ContinuousColor-v0",
+  "agents": [
+    "player"
+  ],
+  "action_mode": "circle",
+  "duration_seconds": 0.5,
+  "max_steps": 15,
+  "actual_steps": 15,
+  "actual_duration": 36.84155297279358,
+  "fps": 30.0,
+  "actual_video_fps": 30.0,
+  "sample_rate": 1,
+  "action_smooth": 5,
+  "time_dilation": 1.0,
+  "actual_sampled_frames": 15,
+  "resolution": [
+    640,
+    480
+  ],
+  "cameras": [
+    {
+      "name": "agent_0_first_person",
+      "type": "first_person",
+      "camera_id": 2
+    },
+    {
+      "name": "agent_0_third_person_0",
+      "type": "third_person",
+      "camera_id": 1
+    },
+    {
+      "name": "agent_0_third_person_90",
+      "type": "third_person",
+      "camera_id": 3
+    },
+    {
+      "name": "agent_0_third_person_180",
+      "type": "third_person",
+      "camera_id": 4
+    },
+    {
+      "name": "agent_0_third_person_270",
+      "type": "third_person",
+      "camera_id": 5
+    }
+  ],
+  "target_agent_index": 0,
+  "target_agent_type": "player",
+  "has_trajectory": false,
+  "has_images": false,
+  "timestamp": "20251208_015909",
+  "folder_name": "Track_AsianTemple_player_circle_20251208_015909"
+}

@@ -40,7 +40,8 @@ class Track(UnrealCv_base):
         }
         self.distance_threshold = self.reward_params["min_distance"]  # distance threshold for collision
         self.tracker_id = self.protagonist_id
-        self.target_id = self.protagonist_id+1
+        # target_id will be set in reset() after population is set
+        self.target_id = None
 
     def step(self, action):
         obs, rewards, done, info = super(Track, self).step(action)
@@ -61,6 +62,18 @@ class Track(UnrealCv_base):
     def reset(self):
         # initialize the environment
         observations = super(Track, self).reset()
+        
+        # Ensure we have at least 2 players for tracking task
+        if len(self.player_list) < 2:
+            raise ValueError(f"Track任务需要至少2个智能体，但当前只有{len(self.player_list)}个。请使用RandomPopulationWrapper或确保配置文件中至少有2个player。")
+        
+        # Set target_id if not set or if it's out of range
+        if self.target_id is None or self.target_id >= len(self.player_list):
+            self.target_id = (self.protagonist_id + 1) % len(self.player_list)
+            if self.target_id == self.tracker_id:
+                self.target_id = (self.target_id + 1) % len(self.player_list)
+        
+        print(f"Tracker ID: {self.tracker_id}, Target ID: {self.target_id}, Player list length: {len(self.player_list)}")
         target_pos = self.unrealcv.get_obj_location(self.player_list[self.target_id])
         print(target_pos)
         self.unrealcv.nav_to_goal(self.player_list[self.target_id], target_pos)

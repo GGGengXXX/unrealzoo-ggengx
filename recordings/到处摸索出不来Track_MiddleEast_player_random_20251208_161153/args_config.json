@@ -1,0 +1,31 @@
+{
+  "env_id": "UnrealTrack-MiddleEast-MixedColor-v0",
+  "output_dir": "./recordings",
+  "camera_config": null,
+  "save_images": false,
+  "num_agents": 6,
+  "resolution": [
+    640,
+    480
+  ],
+  "fps": 30.0,
+  "video_codec": "avc1",
+  "agents": [
+    "player"
+  ],
+  "duration": 10,
+  "max_steps": null,
+  "action_mode": "random",
+  "save_trajectory": false,
+  "sample_rate": 1,
+  "time_dilation": 0.1,
+  "action_smooth": 1,
+  "target_agent_index": 0,
+  "target_agent_type": "player",
+  "use_mixed_actions": false,
+  "command_line": "example/multi_camera_recorder.py",
+  "use_mixed_actions_override": true,
+  "final_env_id": "UnrealTrack-MiddleEast-MixedColor-v0",
+  "output_folder": "Track_MiddleEast_player_random_20251208_161153",
+  "full_output_dir": "./recordings/Track_MiddleEast_player_random_20251208_161153"
+}

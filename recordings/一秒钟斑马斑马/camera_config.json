@@ -1,0 +1,53 @@
+{
+  "target_agent_index": 0,
+  "target_agent_type": "player",
+  "cameras": [
+    {
+      "name": "agent_0_first_person",
+      "cam_type": "first_person",
+      "camera_id": 1,
+      "agent_index": 0,
+      "agent_type": "player"
+    },
+    {
+      "name": "agent_0_third_person_0",
+      "cam_type": "third_person",
+      "camera_id": 2,
+      "agent_index": 0,
+      "agent_type": "player",
+      "distance": 150.0,
+      "height": 50,
+      "angle": 0.0
+    },
+    {
+      "name": "agent_0_third_person_90",
+      "cam_type": "third_person",
+      "camera_id": 3,
+      "agent_index": 0,
+      "agent_type": "player",
+      "distance": 150.0,
+      "height": 50,
+      "angle": 90.0
+    },
+    {
+      "name": "agent_0_third_person_180",
+      "cam_type": "third_person",
+      "camera_id": 4,
+      "agent_index": 0,
+      "agent_type": "player",
+      "distance": 150.0,
+      "height": 50,
+      "angle": 180.0
+    },
+    {
+      "name": "agent_0_third_person_270",
+      "cam_type": "third_person",
+      "camera_id": 5,
+      "agent_index": 0,
+      "agent_type": "player",
+      "distance": 150.0,
+      "height": 50,
+      "angle": 270.0
+    }
+  ]
+}

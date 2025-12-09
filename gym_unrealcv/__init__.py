@@ -110,7 +110,7 @@ maps = [
             'SuburbNeighborhood_Day', 'SuburbNeighborhood_Night', 'Storagehouse','ModularNeighborhood',
             'ModularSciFiVillage','ModularSciFiSeason1',  'LowPolyMedievalInterior_1','QA_Holding_Cells_A', 'ParkingLot','Demo_Roof','MiddleEast','Lighthouse',
             'Cabin_Lake','UniversityClassroom','Tokyo','CommandCenter','JapanTrainStation_Optimised','Hotel_Corridor','Museum','ForestGasStation',
-            'KoreanPalace','CourtYard','Chinese_Landscape_Demo','EnglishCollege','OperaHouse','AsianTemple','Pyramid','PlanetOutDoor',
+            'KoreanPalace','CourtYard','Chinese_Landscape_Demo','EnglishCollege','OperaHouse','AsianTemple','Asian_Temple_Pack','Pyramid','PlanetOutDoor',
             'Map_ChemicalPlant_1','Hangar','Science_Fiction_valley_town','RussianWinterTownDemo01','LookoutTower','LV_Bazaar','OperatingRoom',
             'PostSoviet_Village','Old_Town','AsianMedivalCity','StonePineForest','TemplesOfCambodia_01_01_Exterior','AbandonedDistrict','FlexibleRoom'
         ]

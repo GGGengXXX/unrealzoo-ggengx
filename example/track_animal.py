@@ -8,7 +8,8 @@ import numpy as np
 from gym_unrealcv.envs.wrappers import time_dilation, early_done, monitor, agents, augmentation,configUE
 from gym_unrealcv.envs.tracking.baseline import PoseTracker, Nav2GoalAgent
 import os
-os.environ['UnrealEnv']='/path/to/your/UnrealEnv'
+os.environ['UnrealEnv']='/home/ggengx/tmp/UnrealEnv'
+print(os.listdir(os.environ['UnrealEnv']))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=None)
@@ -21,6 +22,7 @@ if __name__ == '__main__':
     parser.add_argument("-m", '--monitor', dest='monitor', action='store_true', help='auto_monitor')
 
     args = parser.parse_args()
+    # 这里在干什么 ？ 
     env = gym.make(args.env_id)
     env.unwrapped.agents_category=['player','animal'] #choose the agent type in the scene
     env = configUE.ConfigUEWrapper(env, offscreen=False, resolution=(240, 240))

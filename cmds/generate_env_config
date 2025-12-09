@@ -1,0 +1,1 @@
+python generate_env_config.py --env-bin /home/ggengx/tmp/UnrealEnv/UnrealZoo_UE5_5_Linux_v1.0.5/Linux/UnrealZoo_UE5_5/Binaries/Linux/UnrealZoo_UE5_5 --env-map AsianTemple

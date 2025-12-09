@@ -9,6 +9,7 @@ import copy
 import numpy as np
 import os
 os.environ['UnrealEnv']='/home/wuk/DataDisk/UnrealEnv/'
+os.environ['UnrealEnv']='/home/ggengx/tmp/UnrealEnv/'
 
 '''
 An example to show how to use the UnrealCV API to launch the game and run some functions
@@ -161,11 +162,11 @@ if __name__ == '__main__':
     # parser.add_argument('--env-bin', default='UE5_ExampleScene_Win64\Compile_unrealcv5_4\Binaries\Win64\Compile_unrealcv5_4.exe', help='The path to the UE4Editor binary')
     # parser.add_argument('--env-bin', default='Collection_WinNoEditor\WindowsNoEditor\Collection\Binaries\Win64\Collection.exe', help='The path to the UE4Editor binary')
     # parser.add_argument('--env-bin', default='UnrealZoo_UE5_5_Win64_v1.0.1\\UnrealZoo_UE5_5\\Binaries\\Win64\\UnrealZoo_UE5_5.exe', help='The path to the UE4Editor binary')
-    parser.add_argument('--env-bin', default='UnrealZoo_UE5_5_Linux/Linux/UnrealZoo_UE5_5/Binaries/Linux/UnrealZoo_UE5_5', help='The path to the UE4Editor binary')
+    parser.add_argument('--env-bin', default='UnrealZoo_UE5_5_Linux_v1.0.5/Linux/UnrealZoo_UE5_5/Binaries/Linux/UnrealZoo_UE5_5', help='The path to the UE5Editor binary')
 
-    parser.add_argument('--env-map', default='Lighthouse', help='The map to load')
+    parser.add_argument('--env-map', default='AsianTemple', help='The map to load')
     # parser.add_argument('--target_dir', default='gym_unrealcv/envs/setting/Track', help='The folder to save the json file')
-    parser.add_argument('--target_dir', default='gym_unrealcv/envs/setting/Track', help='The folder to save the json file')
+    parser.add_argument('--target_dir', default='gym_unrealcv/envs/setting/Navigation', help='The folder to save the json file')
 
     parser.add_argument('--use-docker', action='store_true', help='Run the game in a docker container')
     parser.add_argument('--resolution', '-res', default='640x480', help='The resolution in the unrealcv.ini file')

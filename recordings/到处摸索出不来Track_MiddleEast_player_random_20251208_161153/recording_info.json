@@ -1,0 +1,54 @@
+{
+  "env_id": "UnrealTrack-MiddleEast-MixedColor-v0",
+  "agents": [
+    "player"
+  ],
+  "action_mode": "random",
+  "duration_seconds": 10,
+  "max_steps": 300,
+  "actual_steps": 300,
+  "actual_duration": 565.7439615726471,
+  "fps": 30.0,
+  "actual_video_fps": 30.0,
+  "sample_rate": 1,
+  "action_smooth": 1,
+  "time_dilation": 0.1,
+  "actual_sampled_frames": 300,
+  "resolution": [
+    640,
+    480
+  ],
+  "cameras": [
+    {
+      "name": "agent_0_first_person",
+      "type": "first_person",
+      "camera_id": 1
+    },
+    {
+      "name": "agent_0_third_person_back_0",
+      "type": "third_person",
+      "camera_id": 2
+    },
+    {
+      "name": "agent_0_third_person_back_90",
+      "type": "third_person",
+      "camera_id": 3
+    },
+    {
+      "name": "agent_0_third_person_back_180",
+      "type": "third_person",
+      "camera_id": 4
+    },
+    {
+      "name": "agent_0_third_person_back_270",
+      "type": "third_person",
+      "camera_id": 5
+    }
+  ],
+  "target_agent_index": 0,
+  "target_agent_type": "player",
+  "has_trajectory": false,
+  "has_images": false,
+  "timestamp": "20251208_161153",
+  "folder_name": "Track_MiddleEast_player_random_20251208_161153"
+}

@@ -1,0 +1,71 @@
+{
+  "cameras": [
+    {
+      "name": "player_0_first_person",
+      "cam_type": "first_person",
+      "agent_index": 0,
+      "agent_type": "player"
+    },
+    {
+      "name": "player_0_third_person_back",
+      "cam_type": "third_person",
+      "agent_index": 0,
+      "agent_type": "player",
+      "distance": 300.0,
+      "height": 150.0,
+      "angle": 0.0
+    },
+    {
+      "name": "player_0_third_person_right",
+      "cam_type": "third_person",
+      "agent_index": 0,
+      "agent_type": "player",
+      "distance": 300.0,
+      "height": 150.0,
+      "angle": 90.0
+    },
+    {
+      "name": "player_0_third_person_left",
+      "cam_type": "third_person",
+      "agent_index": 0,
+      "agent_type": "player",
+      "distance": 300.0,
+      "height": 150.0,
+      "angle": -90.0
+    },
+    {
+      "name": "animal_0_first_person",
+      "cam_type": "first_person",
+      "agent_index": 0,
+      "agent_type": "animal"
+    },
+    {
+      "name": "animal_0_third_person_back",
+      "cam_type": "third_person",
+      "agent_index": 0,
+      "agent_type": "animal",
+      "distance": 300.0,
+      "height": 150.0,
+      "angle": 0.0
+    },
+    {
+      "name": "fixed_camera_1",
+      "cam_type": "fixed",
+      "location": [0.0, 0.0, 500.0],
+      "rotation": [0.0, -45.0, 0.0]
+    },
+    {
+      "name": "fixed_camera_2",
+      "cam_type": "fixed",
+      "location": [1000.0, 1000.0, 800.0],
+      "rotation": [0.0, -30.0, 45.0]
+    },
+    {
+      "name": "topview",
+      "cam_type": "topview",
+      "location": [0.0, 0.0, 0.0],
+      "height": 1500.0
+    }
+  ]
+}
+

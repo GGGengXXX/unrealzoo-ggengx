@@ -1,3 +1,4 @@
+import os
 import os.path
 import time
 import warnings
@@ -11,6 +12,14 @@ from unrealcv.launcher import RunUnreal
 from gym_unrealcv.envs.agent.character import Character_API
 import random
 import sys
+
+# 自动设置 UnrealEnv 环境变量，如果未设置或设置的路径不存在则使用默认路径
+default_unrealenv = os.path.expanduser('~/tmp/UnrealEnv')
+current_unrealenv = os.environ.get('UnrealEnv')
+if not current_unrealenv or not os.path.exists(current_unrealenv):
+    if os.path.exists(default_unrealenv):
+        os.environ['UnrealEnv'] = default_unrealenv
+        warnings.warn(f'自动设置 UnrealEnv 环境变量为: {default_unrealenv} (原设置: {current_unrealenv if current_unrealenv else "未设置"})')
 ''' 
 It is a base env for general purpose agent-env interaction, including single/multi-agent navigation, tracking, etc.
 Observation : raw color image and depth
@@ -118,6 +127,18 @@ class UnrealCv_base(gym.Env):
         else:
             env_map = None
 
+        # 确保 UnrealEnv 环境变量已设置
+        if not os.environ.get('UnrealEnv'):
+            if os.path.exists(default_unrealenv):
+                os.environ['UnrealEnv'] = default_unrealenv
+                warnings.warn(f'自动设置 UnrealEnv 环境变量为: {default_unrealenv}')
+            else:
+                raise ValueError(f'UnrealEnv 环境变量未设置，且默认路径不存在: {default_unrealenv}\n'
+                               f'请设置 UnrealEnv 环境变量指向包含UE二进制文件的目录，或确保 {default_unrealenv} 存在。')
+
+        print(f"env_bin: {env_bin}")
+        print(f"env_map: {env_map}")
+        print(f"UnrealEnv: {os.environ.get('UnrealEnv')}")
         self.ue_binary = RunUnreal(ENV_BIN=env_bin, ENV_MAP=env_map)
 
     def step(self, actions):
@@ -432,7 +453,11 @@ class UnrealCv_base(gym.Env):
         self.cam_list = self.remove_cam(name)
         self.action_space.pop(agent_index)
         self.observation_space.pop(agent_index)
-        self.unrealcv.destroy_obj(name)  # the agent is removed from the scene
+        # 检查对象是否存在于 obj_dict 中，如果存在才调用 destroy_obj
+        if name in self.unrealcv.obj_dict:
+            self.unrealcv.destroy_obj(name)  # the agent is removed from the scene
+        else:
+            warnings.warn(f'Agent {name} not found in obj_dict, skipping destroy_obj')
         self.agents.pop(name)
         st_time=time.time()
         time.sleep(1)
@@ -630,16 +655,67 @@ class UnrealCv_base(gym.Env):
 
     def launch_ue_env(self):
         # launch the UE4 binary
-        env_ip, env_port = self.ue_binary.start(docker=self.docker, resolution=self.resolution, display=self.display,
-                                               opengl=self.use_opengl, offscreen=self.offscreen_rendering,
-                                               nullrhi=self.nullrhi,sleep_time=10)
+        # 增加 sleep_time 到 20 秒，给 Unreal 更多启动时间
+        try:
+            env_ip, env_port = self.ue_binary.start(docker=self.docker, resolution=self.resolution, display=self.display,
+                                                   opengl=self.use_opengl, offscreen=self.offscreen_rendering,
+                                                   nullrhi=self.nullrhi, sleep_time=max(self.sleep_time, 20))
+        except Exception as e:
+            # 检查是否有多个 Unreal 进程在运行
+            import subprocess
+            try:
+                result = subprocess.run(['ps', 'aux'], capture_output=True, text=True)
+                unreal_processes = [line for line in result.stdout.split('\n') if 'UnrealZoo' in line or 'Unreal' in line]
+                if len(unreal_processes) > 1:
+                    warnings.warn(f'检测到多个 Unreal 进程正在运行，这可能导致端口冲突。\n'
+                                f'建议先关闭其他 Unreal 进程：\n'
+                                f'  pkill -f UnrealZoo\n'
+                                f'或手动终止进程。')
+            except:
+                pass
+            raise Exception(f'启动 Unreal 进程失败: {e}\n'
+                          f'请检查：\n'
+                          f'1. 二进制文件路径是否正确: {self.ue_binary.path2binary}\n'
+                          f'2. 是否有足够的系统资源（内存、GPU）\n'
+                          f'3. 是否有其他 Unreal 进程占用资源') from e
 
-
-        # connect to UnrealCV Server
-        self.unrealcv = Character_API(port=env_port, ip=env_ip, resolution=self.resolution, comm_mode=self.comm_mode)
-        # self.unrealcv.client.request('r.Vulkan.EnableDefrag=0')
-        self.unrealcv.set_map(self.env_name)
-        return True
+        # connect to UnrealCV Server with retry mechanism
+        max_retries = 10  # 增加重试次数
+        retry_delay = 3  # 每次重试等待3秒
+        
+        for attempt in range(max_retries):
+            try:
+                self.unrealcv = Character_API(port=env_port, ip=env_ip, resolution=self.resolution, comm_mode=self.comm_mode)
+                # self.unrealcv.client.request('r.Vulkan.EnableDefrag=0')
+                self.unrealcv.set_map(self.env_name)
+                return True
+            except Exception as e:
+                if attempt < max_retries - 1:
+                    warnings.warn(f'连接 UnrealCV 服务器失败 (尝试 {attempt + 1}/{max_retries}): {e}\n'
+                                f'等待 {retry_delay} 秒后重试...')
+                    time.sleep(retry_delay)
+                    # 每次重试后增加等待时间
+                    retry_delay = min(retry_delay + 1, 10)
+                else:
+                    # 检查进程状态
+                    import subprocess
+                    process_info = ""
+                    try:
+                        result = subprocess.run(['ps', 'aux'], capture_output=True, text=True)
+                        unreal_processes = [line for line in result.stdout.split('\n') 
+                                          if 'UnrealZoo' in line or (self.ue_binary.path2binary.split('/')[-1] in line)]
+                        if unreal_processes:
+                            process_info = f"\n当前运行的 Unreal 进程:\n" + "\n".join(unreal_processes[:3])
+                    except:
+                        pass
+                    
+                    raise Exception(f'无法连接到 UnrealCV 服务器 (端口 {env_port})。请检查：\n'
+                                  f'1. Unreal 进程是否正常运行（可能需要更长的启动时间）\n'
+                                  f'2. UnrealCV 插件是否正确加载\n'
+                                  f'3. 端口 {env_port} 是否被占用\n'
+                                  f'4. 是否有多个 Unreal 进程在运行（可能导致端口冲突）\n'
+                                  f'5. 尝试增加 sleep_time 参数（当前: {self.sleep_time}秒）\n'
+                                  f'6. 检查 Unreal 进程日志以获取更多信息{process_info}') from e
 
     def init_agents(self):
         for obj in self.player_list.copy(): # the agent will be fully removed in self.agents

@@ -9,6 +9,7 @@ import json
 import gym_unrealcv
 import gym
 from gym import spaces
+from gym.wrappers import TimeLimit
 import cv2
 import time
 import numpy as np
@@ -288,8 +289,8 @@ def create_default_camera_configs(num_agents=2, target_agent_index=None, target_
     agent_type = target_agent_type or 'player'
     
     print(f'只为智能体 {agent_index} ({agent_type}) 创建相机配置')
-    
-    # 第一人称
+        
+        # 第一人称
     cameras.append(CameraConfig(
         name=f'agent_{agent_index}_first_person',
         cam_type='first_person',
@@ -418,8 +419,8 @@ def allocate_camera_ids(unwrapped_env, cameras, player_list, agents_by_type=None
         # 只处理目标智能体的相机
         cam_agent_index = cam.params.get('agent_index', 0)
         if cam_agent_index != agent_index:
-            continue  # 跳过非目标agent的相机
-        
+                    continue  # 跳过非目标agent的相机
+            
         if cam.cam_type == 'first_person':
             # 第一人称：使用第一个智能体自己的相机ID
             if len(all_cam_ids) > 0:
@@ -978,6 +979,26 @@ if __name__ == '__main__':
     # 创建环境
     print(f"\n创建环境: {args.env_id}")
     env = gym.make(args.env_id)
+    
+    # 移除TimeLimit包装器（如果存在），避免环境因步数限制提前结束
+    # gym在注册环境时如果设置了max_episode_steps，会自动添加TimeLimit包装器
+    def remove_time_limit(env):
+        """递归移除TimeLimit包装器"""
+        if isinstance(env, TimeLimit):
+            max_steps = getattr(env, '_max_episode_steps', 'unknown')
+            print(f"  检测到TimeLimit包装器（max_episode_steps={max_steps}），正在移除...")
+            return env.env  # 返回内部环境，移除TimeLimit包装器
+        elif hasattr(env, 'env'):
+            # 递归检查内部环境
+            env.env = remove_time_limit(env.env)
+        return env
+    
+    # 检查并移除TimeLimit包装器
+    original_env = env
+    env = remove_time_limit(env)
+    if env is not original_env:
+        print(f"  ✓ 已移除TimeLimit包装器，环境将不会因步数限制提前结束")
+    
     env = configUE.ConfigUEWrapper(env, offscreen=False, resolution=tuple(args.resolution))
     
     # 设置智能体类型
@@ -1155,7 +1176,7 @@ if __name__ == '__main__':
         if cam.cam_type in ['first_person', 'third_person']:
             cam_agent_index = cam.params.get('agent_index')
             cam_agent_type = cam.params.get('agent_type', 'player')
-            if cam_agent_index == target_agent_index_for_allocation and cam_agent_type == target_agent_type_for_allocation:
+        if cam_agent_index == target_agent_index_for_allocation and cam_agent_type == target_agent_type_for_allocation:
                 cam_id = camera_id_map.get(cam.name, 'N/A')
                 if cam.cam_type == 'third_person':
                     distance = cam.params.get('distance', 0)
@@ -1164,9 +1185,9 @@ if __name__ == '__main__':
                     print(f"  ✓ {cam.name}: agent={cam_agent_index}({cam_agent_type}), cam_id={cam_id}, 相对坐标(distance={distance}, height={height}, angle={angle}°)")
                 else:
                     print(f"  ✓ {cam.name}: agent={cam_agent_index}({cam_agent_type}), cam_id={cam_id}, 第一人称")
-            else:
-                print(f"  ⚠️  警告：相机 {cam.name} 不属于目标agent (agent_index={cam_agent_index}, agent_type={cam_agent_type})")
-                all_correct = False
+        else:
+            print(f"  ⚠️  警告：相机 {cam.name} 不属于目标agent (agent_index={cam_agent_index}, agent_type={cam_agent_type})")
+            all_correct = False
     if all_correct:
         print(f"  ✓ 所有相机都正确分配给目标agent")
     else:

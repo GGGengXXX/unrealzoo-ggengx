@@ -173,6 +173,7 @@ class UnrealCv_base(gym.Env):
         self.count_steps += 1
 
         # get states
+        # 相机拍摄
         obj_poses, cam_poses, imgs, masks, depths = self.unrealcv.get_pose_img_batch(self.player_list, self.cam_list, self.cam_flag)
         self.obj_poses = obj_poses
         observations = self.prepare_observation(self.observation_type, imgs, masks, depths, obj_poses)
@@ -758,11 +759,15 @@ class UnrealCv_base(gym.Env):
         # the agent is controlled by the external controller
         return self.cam_list.index(random.choice([x for x in self.cam_list if x > 0]))
 
+    # 动作映射
+    # actions2move, actions2turn, actions2animate = self.action_mapping(actions, self.player_list)
     def action_mapping(self, actions, player_list):
         actions2move = []
         actions2animate = []
         actions2head = []
         actions2player = []
+        # player_list
+        # action_space 和 player_list 一一对应
         for i, obj in enumerate(player_list):
             action_space = self.action_space[i]
             act = actions[i]
@@ -792,7 +797,11 @@ class UnrealCv_base(gym.Env):
                         else:
                             actions2head.append(action)
                     elif j == 2:
-                        actions2animate.append(self.agents[obj]["animation_action"][action])
+                        if isinstance(action, int):
+                            actions2animate.append(self.agents[obj]["animation_action"][action])
+                        else:
+                            actions2animate.append(action)
+                        # actions2animate.append(self.agents[obj]["animation_action"][action])
         return actions2move, actions2head, actions2animate
 
 

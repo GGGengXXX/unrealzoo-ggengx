@@ -144,6 +144,27 @@ def setup_third_person_camera(unwrapped_env, cam_id, agent_pose, distance=100.0,
     except:
         return None
 
+def record_frame(RECORD, video_writers, obs, agent_pose, unwrapped_env, all_cam_ids, resolution, third_person_angles):
+    # 录制第一人称视频
+    if RECORD and 'first_person' in video_writers and obs is not None and len(obs) > 0:
+        img = obs[0]
+        if img.shape[:2] != tuple(reversed(resolution)):
+            img = cv2.resize(img, resolution)
+        video_writers['first_person'].write(img)
+    
+    # 录制第三人称视频
+    if RECORD and agent_pose is not None:
+        for i, angle in enumerate(third_person_angles):
+            cam_name = f'third_person_{angle}'
+            if cam_name in video_writers and i + 1 < len(all_cam_ids):
+                cam_id = all_cam_ids[i + 1]
+                img = setup_third_person_camera(unwrapped_env, cam_id, agent_pose, 
+                                                distance=100.0, height=100, angle=angle)
+                if img is not None:
+                    if img.shape[:2] != tuple(reversed(resolution)):
+                        img = cv2.resize(img, resolution)
+                    video_writers[cam_name].write(img)
+
 
 if __name__ == '__main__':
 
@@ -159,6 +180,8 @@ if __name__ == '__main__':
     parser.add_argument("-d", '--early-done', dest='early_done', default=-1, help='early_done when lost in n steps')
     parser.add_argument("-m", '--monitor', dest='monitor', action='store_true', help='auto_monitor')
     parser.add_argument("-o", '--output', dest='output', default='./recordings', help='output directory for videos')
+
+    RECORD = True
 
     args = parser.parse_args()
     env = gym.make(args.env_id)
@@ -186,11 +209,12 @@ if __name__ == '__main__':
     # 创建输出目录
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_dir = os.path.join(args.output, f"keyboard_{timestamp}")
-    os.makedirs(output_dir, exist_ok=True)
+    if RECORD:
+        os.makedirs(output_dir, exist_ok=True)
     
     # 初始化视频写入器
     resolution = (240, 240)
-    fps = 30.0
+    fps = 60.0
     
     def create_video_writer(path):
         """创建视频写入器，尝试多个编码格式"""
@@ -207,22 +231,25 @@ if __name__ == '__main__':
     
     video_writers = {}
     
+    writer = None
+
     # 第一人称相机
-    if len(all_cam_ids) > 0:
+    if len(all_cam_ids) > 0 and RECORD:
         writer = create_video_writer(os.path.join(output_dir, 'agent_0_first_person.mp4'))
         if writer:
             video_writers['first_person'] = writer
     
     # 第三人称相机（4个角度：0°, 90°, 180°, 270°）
     third_person_angles = [0, 90, 180, 270]
-    for i, angle in enumerate(third_person_angles):
-        if i + 1 < len(all_cam_ids):
-            writer = create_video_writer(os.path.join(output_dir, f'agent_0_third_person_{angle}.mp4'))
-            if writer:
-                video_writers[f'third_person_{angle}'] = writer
+    if RECORD:
+        for i, angle in enumerate(third_person_angles):
+            if i + 1 < len(all_cam_ids):
+                writer = create_video_writer(os.path.join(output_dir, f'agent_0_third_person_{angle}.mp4'))
+                if writer:
+                    video_writers[f'third_person_{angle}'] = writer
     
-    print(f'输出目录: {output_dir}')
-    print(f'已分配 {len(all_cam_ids)} 个相机ID，创建 {len(video_writers)} 个视频文件')
+        print(f'输出目录: {output_dir}')
+        print(f'已分配 {len(all_cam_ids)} 个相机ID，创建 {len(video_writers)} 个视频文件')
     
     rewards = 0
     done = False
@@ -234,6 +261,8 @@ if __name__ == '__main__':
     print('Use the "I", "J", "K", and "L" keys to control the agent  movement.')
     print('Press "Q" or "ESC" to stop recording and save videos.')
     
+    flag = False
+
     try:
         while True:
             # 检查是否按下结束录制按键
@@ -248,7 +277,12 @@ if __name__ == '__main__':
             if obs is not None and len(obs) > 0:
                 cv2.imshow('obs', obs[0])
                 cv2.waitKey(1)
-            
+
+            if not flag:
+                flag = True
+                print('Start recording...')
+                print(len(obs))
+
             # 获取agent位置
             agent_poses = info.get('Pose', [])
             if not agent_poses and hasattr(env.unwrapped, 'obj_poses'):
@@ -256,25 +290,27 @@ if __name__ == '__main__':
             
             agent_pose = agent_poses[0] if agent_poses and len(agent_poses) > 0 else None
             
-            # 录制第一人称视频
-            if 'first_person' in video_writers and obs is not None and len(obs) > 0:
-                img = obs[0]
-                if img.shape[:2] != tuple(reversed(resolution)):
-                    img = cv2.resize(img, resolution)
-                video_writers['first_person'].write(img)
+            record_frame(RECORD, video_writers, obs, agent_pose, unwrapped_env, all_cam_ids, resolution, third_person_angles)
+
+            # # 录制第一人称视频
+            # if RECORD and 'first_person' in video_writers and obs is not None and len(obs) > 0:
+            #     img = obs[0]
+            #     if img.shape[:2] != tuple(reversed(resolution)):
+            #         img = cv2.resize(img, resolution)
+            #     video_writers['first_person'].write(img)
             
-            # 录制第三人称视频
-            if agent_pose is not None:
-                for i, angle in enumerate(third_person_angles):
-                    cam_name = f'third_person_{angle}'
-                    if cam_name in video_writers and i + 1 < len(all_cam_ids):
-                        cam_id = all_cam_ids[i + 1]
-                        img = setup_third_person_camera(unwrapped_env, cam_id, agent_pose, 
-                                                       distance=100.0, height=100, angle=angle)
-                        if img is not None:
-                            if img.shape[:2] != tuple(reversed(resolution)):
-                                img = cv2.resize(img, resolution)
-                            video_writers[cam_name].write(img)
+            # # 录制第三人称视频
+            # if RECORD and agent_pose is not None:
+            #     for i, angle in enumerate(third_person_angles):
+            #         cam_name = f'third_person_{angle}'
+            #         if cam_name in video_writers and i + 1 < len(all_cam_ids):
+            #             cam_id = all_cam_ids[i + 1]
+            #             img = setup_third_person_camera(unwrapped_env, cam_id, agent_pose, 
+            #                                            distance=100.0, height=100, angle=angle)
+            #             if img is not None:
+            #                 if img.shape[:2] != tuple(reversed(resolution)):
+            #                     img = cv2.resize(img, resolution)
+            #                 video_writers[cam_name].write(img)
             
             count_step += 1
             if done:
@@ -284,10 +320,11 @@ if __name__ == '__main__':
                 break
     finally:
         # 释放视频写入器
-        print('\n正在保存视频...')
-        for writer in video_writers.values():
-            writer.release()
-        print(f'✓ 视频已保存到: {output_dir}')
-        print(f'  共保存 {len(video_writers)} 个视频文件')
+        if RECORD:
+            print('\n正在保存视频...')
+            for writer in video_writers.values():
+                writer.release()
+            print(f'✓ 视频已保存到: {output_dir}')
+            print(f'  共保存 {len(video_writers)} 个视频文件')
     
     env.close()

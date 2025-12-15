@@ -22,7 +22,8 @@ class Character_API(UnrealCv_API):
             'open_door': self.set_open_door,
             'enter_vehicle': self.enter_exit_car,
             'carry':self.carry_body,
-            'drop':self.drop_body
+            'drop':self.drop_body,
+            'close_door':self.set_close_door
         }
 
     def init_mask_color(self, targets=None):
@@ -420,13 +421,27 @@ class Character_API(UnrealCv_API):
         res = self.client.request(cmd, -1)
         return res
 
-    def set_open_door(self, player, state, return_cmd=False):
+    def set_door(self, player, state, return_cmd=False):
         # state: 0 close, 1 open
         cmd = f'vbp {player} set_open_door {state}'
+        # if return_cmd:
+        #     return cmd
+        # else:
+        #     self.client.request(cmd, -1)
+        return cmd
+    def set_open_door(self, player, return_cmd = False):
+        ret = self.set_door(player, 1, return_cmd=return_cmd)
         if return_cmd:
-            return cmd
+            return ret
         else:
-            self.client.request(cmd, -1)
+            self.client.request(ret, -1)
+        
+    def set_close_door(self, player, return_cmd = False):
+        ret = self.set_door(player, 0, return_cmd = return_cmd)
+        if return_cmd:
+            return ret
+        else:
+            self.client.request(ret, -1)
     def carry_body(self,player,return_cmd=False):
         cmd = f'vbp {player} carry_body'
         if return_cmd:
@@ -467,6 +482,14 @@ class Character_API(UnrealCv_API):
         res = self.client.request(cmd, -1)
         return res
 
+    def my_get_pose_img_batch(self, objs_list, cam_ids, locList):
+        cmd_list = []
+        for loc in locList:
+            cmd_list.extend([loc])
+        
+        for cam_id in cam_ids:
+            pass
+
     def get_pose_img_batch(self, objs_list, cam_ids, img_flag=[False, True, False, False]):
         # get pose and image of objects in objs_list from cameras in cam_ids
         cmd_list = []
@@ -475,6 +498,7 @@ class Character_API(UnrealCv_API):
         for obj in objs_list:
             cmd_list.extend([self.get_obj_location(obj, True),
                              self.get_obj_rotation(obj, True)])
+
 
         for cam_id in cam_ids:
             if cam_id < 0:

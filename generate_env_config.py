@@ -48,7 +48,17 @@ player_config = {
         },
         "head_action": [
             [0, 0, 0], [0, 30, 0], [0, -30, 0]],
-        "animation_action": ["stand", "jump", "crouch"],
+        "animation_action": [                
+                "stand",
+                "jump",
+                "crouch",
+                "liedown",
+                "open_door",
+                "enter_vehicle",
+                "carry",
+                "drop",
+                "close_door"
+            ],
         "move_action": [
             [0, 100], [0, -100], [15, 50], [-15, 50], [30, 0], [-30, 0], [0, 0]
         ],
@@ -166,7 +176,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--env-map', default='AsianTemple', help='The map to load')
     # parser.add_argument('--target_dir', default='gym_unrealcv/envs/setting/Track', help='The folder to save the json file')
-    parser.add_argument('--target_dir', default='gym_unrealcv/envs/setting/Navigation', help='The folder to save the json file')
+    parser.add_argument('--target_dir', default='gym_unrealcv/envs/setting/env_config', help='The folder to save the json file')
 
     parser.add_argument('--use-docker', action='store_true', help='Run the game in a docker container')
     parser.add_argument('--resolution', '-res', default='640x480', help='The resolution in the unrealcv.ini file')

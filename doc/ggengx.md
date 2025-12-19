@@ -90,3 +90,233 @@ python example/random_agent.py -e YOUR_ENV_NAME
 ```bash
 python example/random_agent_multi.py -e YOUR_ENV_NAME
 ```
+
+# 开发设置
+
+## 深度图的获取
+
+```python
+img = unwrapped_env.unrealcv.get_depth(cam_id,show=False)
+```
+
+这里返回的是一个 `(h,w,1)` 的矩阵，深度的值可能在 几万到几百不等
+
+在unrealcv的 `api.py` 中可以找到具体的实现
+
+```python
+def get_depth(self, cam_id, inverse=False, return_cmd=False, show=False):  # get depth from unrealcv in npy format
+        """
+        Get the depth image from a camera.
+
+        Args:
+            cam_id (int): The camera ID.
+            inverse (bool): Whether to inverse the depth. Default is False.
+            return_cmd (bool): Whether to return the command instead of executing it. Default is False.
+            show (bool): Whether to display the image. Default is False.
+
+        Returns:
+            np.ndarray: The depth image.
+        """
+        cmd = f'vget /camera/{cam_id}/depth npy'
+        if return_cmd:
+            return cmd
+        res = self.client.request(cmd)
+        depth = self.decoder.decode_depth(res, inverse)
+        if show:
+            cv2.imshow('image', depth/depth.max())  # normalize the depth image
+            cv2.waitKey(10)
+        return depth
+```
+
+可以通过除以 `numpy.max()` 进行归一化，得到深度图进行imshow
+
+## 多视角获取
+
+首先怎么获取图片，可以调用`api.py` 中的 `get_image` 函数来实现
+
+源码：
+
+```python
+def get_image(self, cam_id, viewmode, mode='bmp', return_cmd=False, show=False, inverse=False):
+        """
+        Get an image from a camera.
+
+        Args:
+            cam_id (int): The camera ID.
+            viewmode (str): The view mode (e.g., 'lit', 'normal', 'object_mask', 'depth').
+            mode (str): The image format (e.g., 'bmp', 'png', 'npy'). Default is 'bmp'.
+            return_cmd (bool): Whether to return the command instead of executing it. Default is False.
+            show (bool): Whether to display the image. Default is False.
+            inverse (bool): Whether to inverse the depth. Default is False.
+        Returns:
+            np.ndarray: The image.
+        """
+        if viewmode == 'depth':
+            return self.get_depth(cam_id, return_cmd=return_cmd, show=show)
+        cmd = f'vget /camera/{cam_id}/{viewmode} {mode}'
+        if return_cmd:
+            return cmd
+        image = self.decoder.decode_img(self.client.request(cmd), mode, inverse)
+        if show:
+            cv2.imshow('image_'+viewmode, image)
+            cv2.waitKey(1)
+        return image
+```
+
+只需要这样就可以获取图片
+
+```python
+img = unwrapped_env.unrealcv.get_image(cam_id, 'lit', 'png')
+```
+
+关键在于角度的计算
+
+这里有一个 ai 写好的函数，只要设置水瓶方位角即可，具体的，我们把每一次人物的朝向传入函数
+
+即可得到追随agent的固定角度的图片
+
+```python
+
+def getImageFromCamera(unwrapped_env, cam_id, agent_pose, distance=100.0, height=100, angle=0):
+    """设置第三人称相机位置"""
+    if agent_pose is None or len(agent_pose) < 6:
+        return None
+    
+    agent_x, agent_y, agent_z = agent_pose[0], agent_pose[1], agent_pose[2]
+    agent_yaw = agent_pose[5]
+    
+    # 计算相对于agent的相机位置
+    angle_rad = np.radians(angle)
+    local_x = -distance * np.cos(angle_rad)
+    local_y = distance * np.sin(angle_rad)
+    local_z = height
+    
+    # 转换为世界坐标
+    agent_yaw_rad = np.radians(agent_yaw)
+    cos_yaw = np.cos(agent_yaw_rad)
+    sin_yaw = np.sin(agent_yaw_rad)
+    
+    world_x = agent_x + local_x * cos_yaw + local_y * sin_yaw
+    world_y = agent_y - local_x * sin_yaw + local_y * cos_yaw
+    world_z = agent_z + local_z
+    
+    # 计算相机朝向
+    dx = agent_x - world_x
+    dy = agent_y - world_y
+    cam_yaw = np.degrees(np.arctan2(dy, dx))
+    
+    cam_loc = [world_x, world_y, world_z]
+    cam_rot = [-15, cam_yaw, 0]
+    
+    try:
+        unwrapped_env.unrealcv.set_cam_location(cam_id, cam_loc)
+        unwrapped_env.unrealcv.set_cam_rotation(cam_id, cam_rot)
+        img = unwrapped_env.unrealcv.get_image(cam_id, 'lit', 'png')
+        return img
+    except:
+        return None
+```
+
+## agent外观的改变
+
+看到 `base_env.py` 中的一个实现
+
+```python
+# 随机分配外观
+    def random_app(self):
+        """
+        Randomly assign an appearance to each agent in the player list based on their category.
+
+        The appearance is selected from a predefined range of IDs for each category.
+
+        Categories:
+            - player: IDs from 1 to 18
+            - animal: IDs from 0 to 26
+        """
+        app_map = {
+            'player': range(1, 19),
+            'animal': range(0, 27),
+            'drone':range(0,1)
+        }
+        for obj in self.player_list:
+            category = self.agents[obj]['agent_type']
+            if category not in app_map.keys():
+                continue
+            app_id = np.random.choice(app_map[category])
+            self.unrealcv.set_appearance(obj, app_id)
+```
+
+是的，你只要轻松的一句话就可以改变外观
+
+```python
+self.unrealcv.set_appearance(obj, app_id)
+```
+
+或者通过一句话，为代码中的所有agent随机外观
+
+```python
+env.unwrapped.random_app()
+```
+
+## 调分辨率
+
+- 包括两个部分，一个是采样的时候，一个是写入视频的时候，当然，我们可以采取同样的分辨率即可
+
+- 具体来说，调用ConfigUEWrapper进行调节
+
+  - ```python
+    env = configUE.ConfigUEWrapper(env, offscreen=True, resolution=resolution
+    ```
+
+- 注意分辨率调大了会影响运行的速度
+
+## 调节运行的速度
+
+有两个值需要同步的调整，那就是 `fps` 和 `time_dilation` 前者是调节视频写入的帧率，后者调节游戏运行的速度。
+
+- 当游戏运行正常，但是写入视频的帧率大的时候，视频就会不连贯。而且动作很快。原因在于，由于机器的限制，采样的频率是不变的，而游戏运行正常，导致采样其实比较稀疏。
+- 当游戏运行慢的时候，视频写入帧率同时提高。这是采样频率不变，可以对慢动作进行充分的采样。使我们想要达到的效果
+
+在 `example/config_set.py` 中设置了两套配置
+
+```python
+    def get_high_fps_1920x1080_config(self):
+        return 50, [1920, 1280], 60.0
+
+    def get_normal_config(self):
+        return 1, [240,240], 5
+```
+
+# 需求分析
+
+## 人物外观的设置
+
+需要方便的设置
+
+使用以下的某一种agent
+
+- player
+- animal
+- car
+
+同时可以随机外观或者指定外观
+
+## 数据导出的规范化
+
+需要同时导出深度图和图像，而且要有时间尺度
+
+可以考虑numpy的导出格式 npy
+
+同时要方便的加载npy
+
+## 方便的设置导出的帧率和分辨率
+
+包括运行的流畅度，视频的速度等等参数
+
+能够轻易调节
+
+## 多个视角的调整
+
+对于不同的主体，高矮胖瘦不一，可能需要微微调整相机的位置
+
+从而保证达到好的拍摄效果

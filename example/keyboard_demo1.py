@@ -244,6 +244,50 @@ def getImageFromCamera(unwrapped_env, cam_id, agent_pose, distance=100.0, height
     except:
         return None
 
+def getDepthImageFromCamera(unwrapped_env, cam_id, agent_pose, distance=100.0, height=100, angle=0):
+    """设置第三人称相机位置"""
+    if agent_pose is None or len(agent_pose) < 6:
+        return None
+    
+    agent_x, agent_y, agent_z = agent_pose[0], agent_pose[1], agent_pose[2]
+    agent_yaw = agent_pose[5]
+    
+    # 计算相对于agent的相机位置
+    angle_rad = np.radians(angle)
+    local_x = -distance * np.cos(angle_rad)
+    local_y = distance * np.sin(angle_rad)
+    local_z = height
+    
+    # 转换为世界坐标
+    agent_yaw_rad = np.radians(agent_yaw)
+    cos_yaw = np.cos(agent_yaw_rad)
+    sin_yaw = np.sin(agent_yaw_rad)
+    
+    world_x = agent_x + local_x * cos_yaw + local_y * sin_yaw
+    world_y = agent_y - local_x * sin_yaw + local_y * cos_yaw
+    world_z = agent_z + local_z
+    
+    # 计算相机朝向
+    dx = agent_x - world_x
+    dy = agent_y - world_y
+    cam_yaw = np.degrees(np.arctan2(dy, dx))
+    
+    cam_loc = [world_x, world_y, world_z]
+    cam_rot = [-15, cam_yaw, 0]
+
+    try:
+        unwrapped_env.unrealcv.set_cam_location(cam_id, cam_loc)
+        unwrapped_env.unrealcv.set_cam_rotation(cam_id, cam_rot)
+        # img = unwrapped_env.unrealcv.get_image(cam_id, 'lit', 'png')
+        img = unwrapped_env.unrealcv.get_depth(cam_id,show=False)
+        # img = unwrapped_env.unrealcv.get_image(cam_id, 'depth', 'bmp')
+        # print(img)
+        # print(img.shape)
+        return img
+    except:
+        return None
+    
+
 def debug_camera():
     for i in range(len(player_list)):
         if hasattr(unwrapped_env, 'cam_list') and i < len(unwrapped_env.cam_list):
@@ -268,6 +312,7 @@ def record_frame(video_writers, fst_img, agent_pose, unwrapped_env, rsolution):
         cam_name = f"third_person_{i}"
         if cam_name in video_writers:
             img = getImageFromCamera(unwrapped_env, 1, agent_pose,angle=get_360_part(agent_pose[4]+i*90))
+            
             if img is not None:
                 if img.shape[:2] != tuple(reversed(resolution)):
                     img = cv.resize(img, resolution)
@@ -278,7 +323,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=None)
     # parser.add_argument("-e", "--env_id", nargs='?', default='UnrealTrack-track_train-ContinuousMask-v4',
     #                     help='Select the environment to run')
-    parser.add_argument("-e", "--env_id", nargs='?', default='UnrealAgent-AsianTemple-MixedColor-v0',
+    parser.add_argument("-e", "--env_id", nargs='?', default='UnrealAgent-Greek_Island-MixedColor-v0',
                         help='Select the environment to run')
     parser.add_argument("-r", '--render', dest='render', action='store_true', help='show env using cv2')
     parser.add_argument("-s", '--seed', dest='seed', default=10, help='random seed')
@@ -302,8 +347,10 @@ if __name__ == '__main__':
 
     from config_set import config
     myconfig = config()
-    args.time_dilation, resolution, fps = myconfig.get_high_fps_1920x1080_config()
+    # args.time_dilation, resolution, fps = myconfig.get_high_fps_1920x1080_config()
     args.time_dilation, resolution, fps = myconfig.get_normal_config()
+
+    AGENT_TYPE = 'player'
 
     enable_record = args.enable_record
     step_count = args.step
@@ -311,7 +358,7 @@ if __name__ == '__main__':
     env = gym.make(args.env_id)
     env = configUE.ConfigUEWrapper(env, offscreen=True, resolution=(1920, 1080))
     env = configUE.ConfigUEWrapper(env, offscreen=True, resolution=resolution)
-    env.unwrapped.agents_category=['animal'] #choose the agent type in the scene
+    env.unwrapped.agents_category=[AGENT_TYPE] #choose the agent type in the scene
 
     if int(args.time_dilation) > 0:  # -1 means no time_dilation
         print(f"应用时间膨胀: {args.time_dilation}x")
@@ -320,7 +367,7 @@ if __name__ == '__main__':
         env = early_done.EarlyDoneWrapper(env, int(args.early_done))
     if args.monitor:
         env = monitor.DisplayWrapper(env)
-    env = augmentation.RandomPopulationWrapper(env, 1, 1, random_target=False)
+    env = augmentation.RandomPopulationWrapper(env, 1, 1, random_tracker=False)
     # env = agents.NavAgents(env, mask_agent=False)
 
     agent = RandomAgent(env.action_space[0])
@@ -343,7 +390,7 @@ if __name__ == '__main__':
                 fourcc = cv.VideoWriter_fourcc(*codec)
                 writer = cv.VideoWriter(path, fourcc, fps, resolution)
                 if writer.isOpened():
-                    print(f"i am now using {codec} to write videos")
+                    
                     return writer
             except:
                 continue
@@ -391,7 +438,11 @@ if __name__ == '__main__':
     # action = get_random_action()
     # cnt = 0
     # nowdelay = np.random.randint(1,5)
+    dimgls = []
     iter = 0
+    print(env.unwrapped.player_list)
+    # 随机人物外观
+    env.unwrapped.random_app()
     try:
         while True:
             if key_state['q'] or key_state['esc'] or iter == step_count:
@@ -425,13 +476,17 @@ if __name__ == '__main__':
 
             # img = getImageFromCamera(unwrapped_env, 1, agent_pose)
             img = getImageFromCamera(unwrapped_env, 1, agent_pose, angle=get_360_part(agent_pose[4]))
-
-            if img is not None:
-                cv.imshow('img',img)
-                cv.waitKey(1)
-            if obs is not None and len(obs) > 0:
-                cv.imshow('obs', obs[0])
-                cv.waitKey(1)
+            # dimg = getDepthImageFromCamera(unwrapped_env, 1, agent_pose,angle=get_360_part(agent_pose[4]))
+            # dimgls.append(dimg)
+            # if img is not None:
+            #     cv.imshow('img',img)
+            #     cv.waitKey(1)
+            # if obs is not None and len(obs) > 0:
+            #     cv.imshow('obs', obs[0])
+            #     cv.waitKey(1)
+            # if dimg is not None:
+            #     cv.imshow('dimg',dimg/dimg.max())
+            #     cv.waitKey(1)
 
             record_frame(video_writers, obs[0], agent_pose, unwrapped_env, resolution)
     finally:
@@ -440,5 +495,9 @@ if __name__ == '__main__':
                 writer.release()
             print(f'视频已保存到: {output_dir}')
             print(f'共保存 {len(video_writers)} 个视频文件')
-
+        # npls = np.array(dimgls[0])[:,:,0]
+        # print(npls.shape)
+        # np.save(os.path.join(output_dir, 'depth_images.npy'), npls)
+        # print(f'深度图像数据已保存到: {output_dir}/depth_images.npy')
+        # np.savetxt('my_data.csv', npls, fmt='%d', delimiter=',')
         env.close()

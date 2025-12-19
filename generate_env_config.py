@@ -174,7 +174,8 @@ if __name__ == '__main__':
     # parser.add_argument('--env-bin', default='UnrealZoo_UE5_5_Win64_v1.0.1\\UnrealZoo_UE5_5\\Binaries\\Win64\\UnrealZoo_UE5_5.exe', help='The path to the UE4Editor binary')
     parser.add_argument('--env-bin', default='UnrealZoo_UE5_5_Linux_v1.0.5/Linux/UnrealZoo_UE5_5/Binaries/Linux/UnrealZoo_UE5_5', help='The path to the UE5Editor binary')
 
-    parser.add_argument('--env-map', default='AsianTemple', help='The map to load')
+    parser.add_argument('--env-map', default='Greek_Island', help='The map to load')
+    # parser.add_argument('--env-map', default='ModularVictorianCity', help='The map to load')
     # parser.add_argument('--target_dir', default='gym_unrealcv/envs/setting/Track', help='The folder to save the json file')
     parser.add_argument('--target_dir', default='gym_unrealcv/envs/setting/env_config', help='The folder to save the json file')
 

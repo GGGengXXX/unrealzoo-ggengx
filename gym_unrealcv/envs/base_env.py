@@ -571,6 +571,7 @@ class UnrealCv_base(gym.Env):
             locations = random.sample(self.safe_start, num_agents) # sample one pre-defined start point
         return locations
 
+# 随机分配外观
     def random_app(self):
         """
         Randomly assign an appearance to each agent in the player list based on their category.
@@ -858,8 +859,10 @@ class UnrealCv_base(gym.Env):
         # 为每个智能体匹配最近相机并更新
         for obj in self.player_list:
             # 获取智能体位置 (包含位置和旋转信息)
+            print("get obj location")
+            print(obj)
             obj_loc = self.unrealcv.get_obj_location(obj)
-
+            print("can not arrive here")
             dis_list = []
             for loc in cam_locs:
                 # 计算距离 (使用3D欧氏距离)
